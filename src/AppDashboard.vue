@@ -176,7 +176,8 @@
                 </v-flex>
               </v-layout>
             </v-container>
-          </v-card>
+          </v-card> 
+          <div></div>
         </v-menu>
         <!-- <v-btn flat to="/Feedback">
           <h4 class="font-weight-light">
