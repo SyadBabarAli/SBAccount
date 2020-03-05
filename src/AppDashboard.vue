@@ -60,7 +60,7 @@
       </v-list>
 
       <!-- Left Bar Hide-->
-      <div v-show="mini" class="table">
+      <!-- <div v-show="mini" class="table">
         <br />
         <br />
         <v-list class="pt-0" dense three-line id="listSupportGroup" v-bind:width="10">
@@ -79,7 +79,7 @@
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
-      </div>
+      </div>-->
     </v-navigation-drawer>
 
     <v-toolbar clipped-left app class="colorDark" dark dense>
@@ -99,29 +99,29 @@
           </template>
 
           <v-card>
-            <v-container fluid grid-list-md>
+            <v-container>
               <v-layout align-center>
                 <v-flex xs12 sm4 text-xs-left>
                   <div>
                     <v-btn depressed small to="/Customers">Customers</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Vendors</v-btn>
+                    <v-btn depressed small to="/Vendors">Vendors</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Products</v-btn>
+                    <v-btn depressed small to="/Products">Products</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Employees</v-btn>
+                    <v-btn depressed small to="/Employees">Employees</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Sales Persons</v-btn>
+                    <v-btn depressed small to="/SalesPersons">Sales Persons</v-btn>
                   </div>
                 </v-flex>
 
                 <v-flex xs12 sm4 text-xs-left>
                   <div>
-                    <v-btn depressed small>Customer Categories</v-btn>
+                    <v-btn depressed small to="/CustomerCategories">Customer Categories</v-btn>
                   </div>
                   <div>
                     <v-btn depressed small>Vendor Categories</v-btn>
@@ -176,7 +176,7 @@
                 </v-flex>
               </v-layout>
             </v-container>
-          </v-card> 
+          </v-card>
           <div></div>
         </v-menu>
         <!-- <v-btn flat to="/Feedback">

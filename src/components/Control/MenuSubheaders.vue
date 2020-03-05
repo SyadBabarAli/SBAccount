@@ -95,7 +95,7 @@ export default {
         {
           id: 1,
           ParentId: 0,
-          Icon: "list",
+          Icon: "show_chart",
           name: "Sale",
           OrderBy: 1
         },
@@ -165,7 +165,8 @@ export default {
         {
           id: 11,
           ParentId: 0,
-          Icon: "list",
+          Icon: "add_shopping_cart",
+          // Icon: "shoping_basket",
           name: "Purchase",
           UserRulesDescription: "Purchase",
           OrderBy: 1
@@ -222,7 +223,7 @@ export default {
         {
           id: 19,
           ParentId: 0,
-          Icon: "list",
+          Icon: "desktop_mac",
           name: "POS",
           OrderBy: 1
         },
@@ -243,7 +244,7 @@ export default {
         {
           id: 22,
           ParentId: 0,
-          Icon: "list",
+          Icon: "account_tree",
           name: "Accounts",
           OrderBy: 1
         },
@@ -264,7 +265,7 @@ export default {
         {
           id: 25,
           ParentId: 0,
-          Icon: "list",
+          Icon: "settings",
           name: "Setup",
           OrderBy: 1
         },
