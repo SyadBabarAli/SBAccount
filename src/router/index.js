@@ -82,7 +82,7 @@ import Zones from "@/components/Main/Setup/SalesGeography/Zones/Zones"
 import ZonesEdit from "@/components/Main/Setup/SalesGeography/Zones/ZonesEdit"
 //SETUPS:
 //GROUPS:
-import Branches from "@/components/Main/Setup/Groups/Branches/Branches"
+import Branch from "@/components/Main/Setup/Groups/Branches/Branch"
 import BranchesEdit from "@/components/Main/Setup/Groups/Branches/BranchesEdit"
 
 import AppDashboard from '../AppDashboard'
@@ -459,9 +459,9 @@ export default new Router({
           component: ZonesEdit,
         },
         {
-          path: "/Branches",
-          name: "Branches",
-          component: Branches,
+          path: "/Branch",
+          name: "Branch",
+          component: Branch,
         },
         {
           path: "/BranchessEdit",

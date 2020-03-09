@@ -174,7 +174,7 @@
                 </v-flex>
                 <v-flex xs12 sm4 text-xs-left>
                   <div>
-                    <v-btn depressed small>Branches</v-btn>
+                    <v-btn depressed small to="/Branch">Branches</v-btn>
                   </div>
                 </v-flex>
               </v-layout>

@@ -1,10 +1,10 @@
 <template>
-  <v-dialog ref="dialog" v-model="modalDateFrom" persistent lazy full-width width="290px">
+  <v-dialog ref="dialog" v-model="modalDateFrom"  lazy full-width width="290px">
     <v-text-field
       slot="activator"
       v-model="dateFrom"
       label="Date From"
-      prepend-icon="event"
+      prepend-icon="event" 
       readonly
     ></v-text-field>
     <v-date-picker v-model="dateFrom" color="colorLight" scrollable>
