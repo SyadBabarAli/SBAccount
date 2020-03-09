@@ -69,6 +69,16 @@
                         <v-flex lg6>
                           <v-text-field v-model="editedItem.Name" label="Name"></v-text-field>
                         </v-flex>
+
+                        <v-flex lg6>
+                          <v-combobox
+                            v-model="selectParentProductCategory"
+                            :items="itemsParentProductCategory"
+                            label="ParentProductCategoryId"
+                            item-text="text"
+                            item-value="vaue"
+                          ></v-combobox>
+                        </v-flex>
                         <!-- <v-flex lg6>
                           <v-text-field v-model="editedItem.IsActive" label="IsActive"></v-text-field>
                         </v-flex>
@@ -91,6 +101,7 @@
               <template slot="items" slot-scope="props">
                 <td class="text-xs-left">{{ props.item.CategoryCustomerId }}</td>
                 <td class="text-xs-left">{{ props.item.Name }}</td>
+                <td class="text-xs-left">{{ props.item.ParentProductCategoryId }}</td>
                 <td class="text-xs-left">{{ props.item.IsActive }}</td>
                 <td class="text-xs-left">{{ props.item.IsDeleted }}</td>
                 <td class="justify-center layout px-0">
@@ -132,6 +143,8 @@ export default {
     SnackBar
   },
   data: () => ({
+    selectParentProductCategory: [],
+    itemsParentProductCategory: [],
     CategoryCustomerId: 0,
     Name: "",
     IsActive: "",
@@ -142,6 +155,7 @@ export default {
     headers: [
       { text: "CategoryCustomerId", value: "CategoryCustomerId" },
       { text: "Name", value: "Name" },
+      { text: "ParentProductCategoryId", value: "ParentProductCategoryId" },
       { text: "IsActive", value: "IsActive" },
       { text: "IsDeleted", value: "IsDeleted" },
       { text: "Actions", value: "", sortable: false, align: "center" }
@@ -176,8 +190,34 @@ export default {
   methods: {
     initialize() {
       this.tableLoad();
+      this.GetSettingParentProductCategory();
     },
 
+    GetSettingParentProductCategory() {
+      axios({
+        method: "get",
+        url:
+          this.$urlApplication +
+          "CategoryCustomer/GetSettingParentProductCategory"
+      })
+        .then(res => {
+          this.itemsParentProductCategory = [];
+          var isTrue = true;
+          for (let items of res.data) {
+            var result = {
+              value: items.value,
+              text: items.text
+            };
+            if (isTrue) {
+              this.selectParentProductCategory = result;
+              isTrue = false;
+            }
+            this.itemsParentProductCategory.push(result);
+          }
+        })
+        .catch(error => {
+        });
+    },
     async tableLoad() {
       this.isLoading = true;
       const res = await axios
@@ -195,6 +235,7 @@ export default {
       var obj = this.editedItem;
       obj.CompanyId = 1;
       obj.Name = this.editedItem.Name;
+      obj.ParentProductCategoryId = this.selectParentProductCategory.value;
 
       this.IsSnackBar = true;
 
@@ -217,7 +258,9 @@ export default {
       var obj = this.editedItem;
       obj.CompanyId = 1;
       obj.CategoryCustomerId = this.editedItem.CategoryCustomerId;
-      obj.Name = this.editedItem.Name;     
+      obj.Name = this.editedItem.Name;
+      obj.ParentProductCategoryId = this.selectParentProductCategory.value;
+
       this.IsSnackBar = true;
 
       axios({
@@ -260,6 +303,17 @@ export default {
     },
     editItem(item) {
       var obj = item;
+
+      //1
+      for (var items of this.itemsParentProductCategory) {
+        if (obj.ParentProductCategoryId == items.value) {
+          this.selectParentProductCategory = {
+            value: items.value,
+            text: items.text
+          };
+          break;
+        }
+      }
 
       this.editedIndex = this.listOfRecords.indexOf(item);
       this.editedItem = Object.assign({}, item);

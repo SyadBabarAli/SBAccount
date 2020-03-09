@@ -121,28 +121,31 @@
 
                 <v-flex xs12 sm4 text-xs-left>
                   <div>
-                    <v-btn depressed small to="/CustomerCategories">Customer Categories</v-btn>
+                    <v-btn depressed small to="/CategoryCustomer">Customer</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Vendor Categories</v-btn>
+                    <v-btn depressed small  to="/CategoryVendor" >Vendor</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Product Categories</v-btn>
+                    <v-btn depressed small  to="/CategoryProduct">Product</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Brands</v-btn>
+                    <v-btn depressed small  to="/CategoryBrand">Brands</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Departments</v-btn>
+                    <v-btn depressed small  to="/CategoryDepartment">Departments</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small>Designations</v-btn>
+                    <v-btn depressed small  to="/CategoryDesignation">Designations</v-btn>
                   </div>
                 </v-flex>
 
                 <v-flex xs12 sm4 text-xs-left>
                   <div>
-                    <v-btn depressed small>Taxes</v-btn>
+                    <v-btn depressed small to="/GeneralTax">Taxes</v-btn>
+                  </div>
+                  <div>
+                    <v-btn depressed small to="/GeneralWarehouse">Warehouse</v-btn>
                   </div>
                   <div>
                     <v-btn depressed small>Adjustment Types</v-btn>

@@ -14,6 +14,21 @@ export const mixins = {
   },
 
   methods: {
+    //Inlin Grid
+    isRequiredField(pObj, pRequired) {
+      var obj = pObj;
+      var required = pRequired;
+      var result = false;
+      if (obj == undefined || obj.length == 0) {
+        result = false;
+      } else {
+        result = true;
+      }
+      return result;
+    },
+    f1() {
+      alert("f1");
+    },
     convertTwoDecimal(pVal) {
       var obj = pVal;
       var result = 0.00;

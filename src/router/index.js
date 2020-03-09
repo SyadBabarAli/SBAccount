@@ -46,17 +46,17 @@ import Vendors from "@/components/Main/Setup/List/Vendors/Vendors"
 import VendorsEdit from "@/components/Main/Setup/List/Vendors/VendorsEdit"
 //SETUPS:
 //CATEGORIES:
-import Brands from "@/components/Main/Setup/Categories/Brands/Brands"
+import CategoryBrand from "@/components/Main/Setup/Categories/Brands/Brands"
 import BrandsEdit from "@/components/Main/Setup/Categories/Brands/BrandsEdit"
-import CustomerCategories from "@/components/Main/Setup/Categories/CustomerCategories/CustomerCategories"
+import CategoryCustomer from "@/components/Main/Setup/Categories/CustomerCategories/CustomerCategories"
 import CustomerCategoriesEdit from "@/components/Main/Setup/Categories/CustomerCategories/CustomerCategoriesEdit"
-import Departments from "@/components/Main/Setup/Categories/Departments/Departments"
+import CategoryDepartment from "@/components/Main/Setup/Categories/Departments/Departments"
 import DepartmentsEdit from "@/components/Main/Setup/Categories/Departments/DepartmentsEdit"
-import Designation from "@/components/Main/Setup/Categories/Designation/Designation"
+import CategoryDesignation from "@/components/Main/Setup/Categories/Designation/Designation"
 import DesignationEdit from "@/components/Main/Setup/Categories/Designation/DesignationEdit"
-import ProductCategories from "@/components/Main/Setup/Categories/ProductCategories/ProductCategories"
+import CategoryProduct from "@/components/Main/Setup/Categories/ProductCategories/ProductCategories"
 import ProductCategoriesEdit from "@/components/Main/Setup/Categories/ProductCategories/ProductCategoriesEdit"
-import VendorCategories from "@/components/Main/Setup/Categories/VendorCategories/VendorCategories"
+import CategoryVendor from "@/components/Main/Setup/Categories/VendorCategories/VendorCategories"
 import VendorCategoriesEdit from "@/components/Main/Setup/Categories/VendorCategories/VendorCategoriesEdit"
 //SETUPS:
 //General:
@@ -64,9 +64,9 @@ import AdjustmentsType from "@/components/Main/Setup/General/AdjustmentsType/Adj
 import AdjustmentsTypeEdit from "@/components/Main/Setup/General/AdjustmentsType/AdjustmentsTypeEdit"
 import CustomFields from "@/components/Main/Setup/General/CustomFields/CustomFields"
 import CustomFieldsEdit from "@/components/Main/Setup/General/CustomFields/CustomFieldsEdit"
-import Taxes from "@/components/Main/Setup/General/Taxes/Taxes"
+import GeneralTax from "@/components/Main/Setup/General/Taxes/Taxes"
 import TaxesEdit from "@/components/Main/Setup/General/Taxes/TaxesEdit"
-import Warehouses from "@/components/Main/Setup/General/Warehouses/Warehouses"
+import GeneralWarehouse from "@/components/Main/Setup/General/Warehouses/Warehouses"
 import WarehousesEdit from "@/components/Main/Setup/General/Warehouses/WarehousesEdit"
 //SETUPS:
 //Sales Geography
@@ -208,40 +208,51 @@ export default new Router({
         //   name: "Quotation",
         //   component: Quotation
         // },
-
+        // {
+        //   path: "/CategoryBrand",
+        //   component: CategoryBrand,
+        //   name: "CategoryBrand",
+        // },
+        // {
+        //   path: "/CategoryBrand",
+        //   component: CategoryCustomer,
+        //   name: "CategoryBrand",
+        // },
+        // {
+        //   path: "/CategoryBrand",
+        //   component: CategoryBrand,
+        //   name: "CategoryBrand",
+        // },
+        // {
+        //   path: "/CategoryBrand",
+        //   component: CategoryBrand,
+        //   name: "CategoryBrand",
+        // },
+        // {
+        //   path: "/CategoryBrand",
+        //   component: CategoryBrand,
+        //   name: "CategoryBrand",
+        // },
         {
           path: "/SaleQuotation",
           component: SaleQuotation,
           name: "SaleQuotation",
         },
-
         {
           path: "/SaleOrder",
           component: SaleOrder,
           name: "SaleOrder",
         },
-        // {
-        //     path: "/HADI",
-        //     component: HADI,
-        //     name: "HADI",
-        // },
-        // {
-        //     path: "/Distribution",
-        //     component: Distribution,
-        //     name: "Distribution",
-        // },
         {
           path: "/Delivery",
           component: Delivery,
           name: "Delivery",
         },
-
         {
           path: "/DeliveryEdit",
           name: "DeliveryEdit",
           component: DeliveryEdit,
         },
-
         {
           path: "/Invoice",
           name: "Invoice",
@@ -364,20 +375,20 @@ export default new Router({
           name: "SalesPersonsEdit",
           component: SalesPersonsEdit,
         },
-        {
-          path: "/Vendors",
-          name: "Vendors",
-          component: Vendors,
-        },
+        // {
+        //   path: "/CategoryVendor",
+        //   name: "CategoryVendor",
+        //   component: CategoryVendor,
+        // },
         {
           path: "/VendorsEdit",
           name: "VendorsEdit",
           component: VendorsEdit,
         },
         {
-          path: "/Brands",
-          name: "Brands",
-          component: Brands,
+          path: "/CategoryBrand",
+          name: "CategoryBrand",
+          component: CategoryBrand,
         },
         {
           path: "/BrandsEdit",
@@ -386,9 +397,9 @@ export default new Router({
         },
 
         {
-          path: "/CustomerCategories",
-          name: "CustomerCategories",
-          component: CustomerCategories,
+          path: "/CategoryCustomer",
+          name: "CategoryCustomer",
+          component: CategoryCustomer,
         },
         {
           path: "/CustomerCategoriesEdit",
@@ -396,9 +407,9 @@ export default new Router({
           component: CustomerCategoriesEdit,
         },
         {
-          path: "/Departments",
-          name: "Departments",
-          component: Departments,
+          path: "/CategoryDepartment",
+          name: "CategoryDepartment",
+          component: CategoryDepartment,
         },
         {
           path: "/DepartmentsEdit",
@@ -406,9 +417,9 @@ export default new Router({
           component: DepartmentsEdit,
         },
         {
-          path: "/Designation",
-          name: "Designation",
-          component: Designation,
+          path: "/CategoryDesignation",
+          name: "CategoryDesignation",
+          component: CategoryDesignation,
         },
         {
           path: "/DesignationEdit",
@@ -416,9 +427,9 @@ export default new Router({
           component: DesignationEdit,
         },
         {
-          path: "/ProdutCategories",
-          name: "ProuctCategories",
-          component: ProductCategories,
+          path: "/CategoryProduct",
+          name: "CategoryProduct",
+          component: CategoryProduct,
         },
         {
           path: "/ProductCategoriesEdit",
@@ -426,9 +437,9 @@ export default new Router({
           component: ProductCategoriesEdit,
         },
         {
-          path: "/VendorCategories",
-          name: "VendorCategories",
-          component: VendorCategories,
+          path: "/CategoryVendor",
+          name: "CategoryVendor",
+          component: CategoryVendor,
         },
         {
           path: "/VendorCategoriesEdit",
@@ -456,9 +467,9 @@ export default new Router({
           component: CustomFieldsEdit,
         },
         {
-          path: "/Taxes",
-          name: "Taxes",
-          component: Taxes,
+          path: "/GeneralTax",
+          name: "GeneralTax",
+          component: GeneralTax,
         },
         {
           path: "/TaxesEdit",
@@ -466,9 +477,9 @@ export default new Router({
           component: TaxesEdit,
         },
         {
-          path: "/Warehouses",
-          name: "Warehouses",
-          component: Warehouses,
+          path: "/GeneralWarehouse",
+          name: "GeneralWarehouse",
+          component: GeneralWarehouse,
         },
         {
           path: "/WarehousesEdit",
