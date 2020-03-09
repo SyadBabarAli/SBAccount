@@ -85,91 +85,13 @@ import ZonesEdit from "@/components/Main/Setup/SalesGeography/Zones/ZonesEdit"
 import Branches from "@/components/Main/Setup/Groups/Branches/Branches"
 import BranchesEdit from "@/components/Main/Setup/Groups/Branches/BranchesEdit"
 
-//import Quotation from "@/components/Main/Sale/Quotation/Quotation";
-
-import AllTickets from "@/components/Main/AllTicket/AllTickets";
-import AllTicketTest from "@/components/Main/AllTicket/AllTicketTest";
-import Priority from "@/components/Main/Priority/Priority";
-import TicketSearch from "@/components/Main/TicketSearch/TicketSearch";
-
-import ITInventory from "@/components/Main/ITInventory/ITInventory";
-import AdministrativeRight from "@/components/Main/AdministrativeRight/AdministrativeRight";
-
-import Pending from "@/components/Main/Pending/Pending";
-import Feedback from "@/components/Main/Feedback/Feedback";
-import FirstResponseSLA from "@/components/Main/FirstResponseSLA/FirstResponseSLA";
-
-import MetAndBreached from "@/components/Main/TicketStatusWise/MetAndBreached";
-import Login from "@/components/Main/Login";
-//import Test from "@/components/Main/Test";
-//import Form1 from "@/components/Main/Form1";
-import Ticket from "@/components/Main/Ticket";
-
-//Administration
-import User from "@/components/Main//User/User";
-import DefineAnalyst from "@/components/Main//DefineAnalyst/DefineAnalyst";
-import UserGroup from "@/components/Main/UserGroup/UserGroup";
-import RoleUserRight from "@/components/Main/RoleUserRight/RoleUserRight";
-import TrendChart from "@/components/Main/TrendNew/TrendChart";
-import TrendChartNew from "@/components/Main/TrendNew/TrendChartNew";
-import Tree from "@/components/Main/RoleUserRight/Tree";
-
-//Configuration
-import Ftag from "@/components/Other/Ftag";
-import MassNotification from "@/components/Main/MassNotification/MassNotification";
-import QualityIndicator from "@/components/Main/QualityIndicator/QualityIndicator";
-import UnrecordedCall from "@/components/Main/UnrecordedCall/UnrecordedCall";
-//import ServiceDeskStatistics from "@/components/Other/ServiceDeskStatistics";
-import ServiceDeskStatistic from "@/components/Main/ServiceDeskStatistic/ServiceDeskStatistics";
-
-import DefineSupportGroup from "@/components/Main/Configuration/DefineSupportGroup";
-import DefineLocation from "@/components/Main/Configuration/DefineLocation";
-import DefineUser from "@/components/Main/Configuration/DefineUser";
-
-//import PunctualityKPI from "@/components/Other/PunctualityKPI";
-
-import AnalystKPI from "@/components/Main/AnalystKPI/AnalystKPI";
-import PunctualityKPI from "@/components/Main/AnalystKPI/PunctualityKPI";
-import CallToTicketKPI from "@/components/Main/AnalystKPI/CallToTicketKPI";
-import QualityIndicatorKPI from "@/components/Main/AnalystKPI/QualityIndicatorKPI";
-
-import AgentStatistics from "@/components/Main/AnalystKPI/AgentStatistics";
-
-import QualityControlCategory from "@/components/Main/QualityControlCategory/QualityControlCategory";
-import Task from "@/components/Main/Task/Task";
-
 import AppDashboard from '../AppDashboard'
 
 //-------------------------------------------------------Knowledge Base-------------------------------------------------------------
 import KB from "@/components/Main/KB";
 import KBGlobalSearch from "@/components/Main/KB/KBGlobalSearch";
-import KBTest from "@/components/Main/KB/Test";
 //import KBPageOne from "@/components/Main/KB/PageOne";
-import KBTreeView from "@/components/Main/KB/KBTreeView/KBTreeView";
-import Article from "@/components/Main/KB/Article/Article";
 import ArticleEdit from "@/components/Main/KB/Article/ArticleEdit";
-import FavoriteArticle from "@/components/Main/KB/FavoriteArticle/FavoriteArticle";
-import KBUserGroup from "@/components/Main/KB/UserGroup/UserGroup";
-import KBRoleUserRight from "@/components/Main/KB/RoleUserRight/RoleUserRight";
-import KBUser from "@/components/Main/KB/User/User";
-
-import ArticleRequestNotification from "@/components/Main/KB/ArticleRequestNotification/ArticleRequestNotification"
-
-
-//Noman Rajani
-import Tier2 from "@/components/Main/NomanRajani/Tier-2";
-import Tier3 from "@/components/Main/NomanRajani/Tier-3";
-
-import Test from "@/components/Main/NomanRajani/Test";
-import CrystalReport from "@/components/Main/NomanRajani/CrystalReport";
-import CrystalReportEmail from "@/components/Main/NomanRajani/CrystalReportEmail";
-import CallScoreCard from "@/components/Main/NomanRajani/CallScoreCard";
-//import PageOne from '@/components/PageOne'
-//import MenuSubheaders from '@/components/MenuSubheaders'
-//import TreeView from '@/components/TreeView'
-//import AllTicket from '@/components/AllTicket'
-
-import UserGroup2 from "@/components/Main/UserGroup/UserGroup2";
 
 Vue.use(Router);
 

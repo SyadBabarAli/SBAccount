@@ -282,7 +282,6 @@
 </template>
 
 <script>
-import TicketSearch from "./components/Main/TicketSearch/TicketSearch";
 import WebFontLoader from "webfontloader";
 import MenuSubheaders from "./components/control/MenuSubheaders";
 import treeView from "./components/control/TreeView";
@@ -301,7 +300,7 @@ export default {
     treeView,
     TreeViewSupportGroup,
     TreeViewLocation,
-    TicketSearch
+    
   },
   data: () => ({
     loginItems: [{ title: "Log Our" }],

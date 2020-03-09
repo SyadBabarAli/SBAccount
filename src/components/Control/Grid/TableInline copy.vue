@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- {{this.objData}} -->
+    <!-- <input id="child-input" type="text"  v-on:keyup="onClickButton"/> -->
+    <!-- <input id="child-input" type="text" v-on:keyup="onClickButton " /> -->
+
     <table class="v-table table-bordered">
       <thead>
         <th class="text-xs-left caption">Product</th>
@@ -22,7 +26,6 @@
               onmouseover="this.style.color='red'"
               onmouseout="this.style.color='gray'"
               @click="deleteRow(index, items)"
-              v-on:click="emitToParent"
             >delete</v-icon>
           </td>
         </tr>
@@ -32,7 +35,6 @@
             <select
               v-model="selectProduct"
               v-bind:class="[validation.requiredProduct ? '': 'txtRequired' ]"
-              style="width:100px"
             >
               <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
             </select>
@@ -51,7 +53,7 @@
             <input
               type="number"
               min="0"
-              maxlength="12"
+              step=".01"
               v-model="Price"
               @change="calculateLineTotal(tableRow)"
               v-bind:class="[this.validation.requiredPrice ?  '': 'txtRequired' ]"
@@ -59,12 +61,11 @@
           </td>
           <td>
             <input
-              type="text"
-              maxlength="12"
+              type="number"
               min="0"
+              max="100"
               v-model="Discount"
               @change="calculateLineTotal(tableRow)"
-              @keypress="preventNumericInput($event)"
             />
           </td>
           <td>
@@ -76,7 +77,6 @@
               onmouseover="this.style.color='green'"
               onmouseout="this.style.color='gray'"
               @click="addNewRow"
-              v-on:click="emitToParent"
             >edit</v-icon>
           </td>
         </tr>
@@ -104,9 +104,8 @@ export default {
       ],
       table_subtotal: 0,
       table_total: 0,
-      table_tax: 0,
-      tableRow: [],
-      tableRowCompelete: null
+      table_tax: 5,
+      tableRow: []
     };
   },
   mounted: function() {
@@ -176,7 +175,6 @@ export default {
         this.tableRow.splice(idx, 1);
       }
       this.calculateTotal();
-      this.refreshData();
     },
     addNewRow() {
       var Product = this.selectProduct.value;
@@ -213,35 +211,16 @@ export default {
           Discount: this.Discount,
           Total: this.Total
         });
-        this.calculateTotal();
-        this.calculateLineTotal(this.tableRow);
-
-        this.tableRowCompelete = {
-          tableRow: this.tableRow,
-          subTotal: this.table_subtotal,
-          total: this.table_total
-        };
 
         this.Discount = "";
         this.Name = "";
         this.Price = "";
         this.Quantity = "";
         this.Total = "";
-        this.refreshData();
       }
     },
-    refreshData() {
-      this.calculateTotal();
-      this.calculateLineTotal(this.tableRow);
 
-      this.tableRowCompelete = {
-        tableRow: this.tableRow,
-        subTotal: this.table_subtotal,
-        total: this.table_total
-      };
-    },
-
-    //Inline Grid
+    //Inlin Grid
     isRequiredField(pObj, pRequired) {
       var obj = pObj;
       var required = pRequired;
@@ -253,35 +232,12 @@ export default {
       }
       return result;
     },
-    // Triggered when `childToParent` event is emitted by the child.
-    // Define the method that emits data to the parent as the first parameter to `$emit()`.
-    // This is referenced in the <template> call in the parent. The second parameter is the payload.
-    emitToParent(event) {
-      this.$emit("childToParent", this.tableRowCompelete);
-    },
-
-    preventNumericInput(obj) {
-      // var input = obj.target.value;
-      // var result = 0;
-
-      // if (input == null || input == undefined) {
-      //   input = result;
-      // } else {
-      //   input = parseInt(input);
-      //   if (input < 0) {
-      //     obj.target.value = 0;
-      //   }
-      //   if (input > 100) {
-      //     obj.target.value = 100;
-      //   }
-      // }
-
-      var evt = obj.target;
-
-      var iKeyCode = evt.which ? evt.which : evt.keyCode;
-      if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
-        return false;
+    onClickButton(event) {
+      this.$emit("clicked", this.tableRow);
     }
+    // emitToParent(event) {
+    //   this.$emit("childToParent", this.tableRow);
+    // }
   }
 };
 </script>
@@ -291,38 +247,16 @@ export default {
 .table-bordered th {
   border: 1px solid #dee2e6;
 }
-/* Table Self Style*/
-table.v-table tbody td:first-child,
-table.v-table tbody td:not(:first-child),
-table.v-table tbody th:first-child,
-table.v-table tbody th:not(:first-child),
-table.v-table thead td:first-child,
-table.v-table thead td:not(:first-child),
-table.v-table thead th:first-child,
-table.v-table thead th:not(:first-child) {
-  padding: 0 10px;
-  width: inherit;
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+table.v-table tbody td,
+table.v-table tbody th {
   height: 30px;
 }
 .txtRequired {
   border: 1px solid red;
   border-radius: 4px;
 }
-input,
-select {
+input {
   border: 1px solid gray;
   border-radius: 4px;
-  width: 100%;
-  -moz-appearance: none;
-  -webkit-appearance: none;
 }
-
-/* select.selector {
-  width: 100px;
-  border-style: solid;
-} */
 </style>

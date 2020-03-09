@@ -1,13 +1,7 @@
 <template>
   <v-layout row wrap class="pa-2">
     <v-flex lg12 class="mt-12">
-      {{this.tableRow}}
       <v-card class="black--text elevation-5">
-        <v-layout>
-          <v-flex>
-            <table-inline :objData="itemsProduct" @clicked="onClickChild" />
-          </v-flex>
-        </v-layout>
         <v-layout>
           <v-flex lg2>
             <v-text-field v-model="editedItem.Name" label="Customer*"></v-text-field>
@@ -40,8 +34,15 @@
           </v-flex>
           <v-flex lg2>
             <v-text-field v-model="editedItem.Fax" label="Fax"></v-text-field>
-            {{this.tableRow}}
           </v-flex>
+        </v-layout>
+        <v-layout>
+          <v-flex lg12 class="pa-1">
+            <table-inline :objData="this.itemsProduct" v-on:childToParent="onChildClick" />
+          </v-flex>
+        </v-layout>
+        <v-layout>
+          <v-flex lg12 class="pa-0">{{this.tableRow}}</v-flex>
         </v-layout>
       </v-card>
     </v-flex>
@@ -110,10 +111,8 @@ export default {
         })
         .catch(error => {});
     },
-    onClickChild(value) {
+    onChildClick(value) {
       this.tableRow = value;
-      debugger
-      //console.log(value); // someValue
     }
   }
 };

@@ -94,15 +94,9 @@ Vue.use(
     }
     , colorScheme: colorScheme
   }
-  //   , {
-  //   iconfont: 'mdi' // 'md' || 'mdi' || 'fa' || 'fa4'
-  // }
+ 
 );
 
-// import ECharts from 'vue-echarts/components/ECharts'
-// // import ECharts modules manually to reduce bundle size
-// import 'echarts/lib/chart/bar'
-// import 'echarts/lib/component/tooltip'
 
 import VueECharts from "vue-echarts/components/ECharts";
 import "echarts/lib/chart/pie";
@@ -118,10 +112,6 @@ import store from "./store";
 Vue.config.productionTip = false;
 
 import filters from "./filters";
-
-//Vue.filter("momentDate", filters.momentDate);
-//Vue.filter("momentDateDash", filters.momentDateDash);
-//Vue.filter("toLocaleString", filters.toLocaleString);
 
 Vue.filter("momentTime", filters.momentTime);
 Vue.filter("momentDateOnly", filters.momentDateOnly);
@@ -139,45 +129,15 @@ import Highcharts from 'highcharts'
 import VueHighcharts from 'vue-highcharts'
 import highchartsMore from 'highcharts/highcharts-more'
 
-
-//New  17-03-2019
-// load these modules as your need
 import loadStock from "highcharts/modules/stock";
-//import loadMap from "highcharts/modules/map";
-//import loadDrilldown from "highcharts/modules/drilldown";
-// some charts like solid gauge require `highcharts-more.js`, you can find it in official demo.
-//import loadHighchartsMore from "highcharts/highcharts-more";
-//import loadSolidGauge from "highcharts/modules/solid-gauge";
-//import exportingInit from 'highcharts/modules/exporting'
 
 loadStock(Highcharts);
-//loadMap(Highcharts);
-//loadDrilldown(Highcharts);
-//loadHighchartsMore(Highcharts);
-//loadSolidGauge(Highcharts);
-//exportingInit(Highcharts)
-
-//New  17-03-2019
-
-
-//High Chart-End
 
 
 //High Chart-Start
 highchartsMore(Highcharts)
 Vue.use(VueHighcharts, { Highcharts })
 //High Chart-End
-
-// import axios from 'axios'
-// const base = axios.create({
-//   baseURL: 'http://localhost:60868/api/'
-// })
-// Vue.prototype.$http = base
-
-//Vue.prototype.$urlApplication = 'http://localhost:60868/api/'
-//Vue.prototype.$urlApplication = 'https://sddashboard.aku.edu/api/'
-//Vue.prototype.$urlDomain = 'http://localhost:60868/'
-
 
 import JsonExcel from 'vue-json-excel'
 Vue.component('downloadExcel', JsonExcel)
@@ -188,20 +148,6 @@ export const bus = new Vue()
 import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.use(CKEditor);
 
-// //Text Editor Start
-// import VueQuill from 'vue-quill'
-// Vue.use(VueQuill)
-
-// import VueQuillEditor from 'vue-quill-editor'
-
-// // require styles
-// import 'quill/dist/quill.core.css'
-// import 'quill/dist/quill.snow.css'
-// import 'quill/dist/quill.bubble.css'
-
-// Vue.use(VueQuillEditor, /* { default global options } */)
-
-//Text Editor End
 
 
 /* eslint-disable no-new */
@@ -213,7 +159,3 @@ new Vue({
   template: "<App/>",
   //mixins: [mixins]
 });
-
-// Vue.extend({
-//   mixins: [mixins]
-// })
