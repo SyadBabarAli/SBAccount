@@ -59,13 +59,15 @@ import { mixins } from "../../../../mixins/CustomMixins";
 import ButtonSmall from "../../../../components/control/ButtonSmall";
 import TableInline from "../../../../components/control/Grid/TableInline";
 import DatePicker from "../../../../components/control/DatePickerFrom";
+import AutoComplete from "../../../../components/control/AutoCompelete/AutoCompelete";
 
 export default {
   mixins: [mixins],
   components: {
     ButtonSmall,
     TableInline,
-    DatePicker
+    DatePicker,
+    AutoComplete
   },
   data() {
     return {
