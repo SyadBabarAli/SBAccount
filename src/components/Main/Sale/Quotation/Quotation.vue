@@ -5,26 +5,43 @@
         <v-layout>
           <v-flex lg12>
             <v-card-title class="headline grey lighten-3 pa-1 ma-0" primary-title>Sale Quotations</v-card-title>
-
             <v-layout>
               <v-flex lg2 class="pa-1">
-                <v-text-field v-model="editedItem.Name" label="Customer"></v-text-field>
+                <!-- Autocomplete -->
+                Customer Name - {{this.autoCompelete}}
+                <auto-complete
+                  :isAsync="true"
+                  :apiUrl="'SaleQuotation/GetCustomer?pSearch='"
+                  v-on:input="onChildClickAutoCompelete"
+                />
+                <!-- <v-text-field v-model="editedItem.Name" label="Customer"></v-text-field> -->
               </v-flex>
               <v-flex class="pa-1">
                 <v-text-field v-model="editedItem.AddressLine1" label="Number"></v-text-field>
               </v-flex>
               <v-flex class="pa-1">
-                <v-text-field v-model="editedItem.AddressLine2" label="Date"></v-text-field>
+                <input type="date" v-model="DateCreated" />
+
+                <!-- <v-text-field v-model="editedItem.AddressLine2" label="Date"></v-text-field> -->
               </v-flex>
               <v-flex class="pa-1">
-                <date-picker/>
+                <input type="date" v-model="ExpiryDate" />
+
+                <!-- <date-picker /> -->
                 <!-- <v-text-field v-model="editedItem.City" label="Expiry Date"></v-text-field> -->
               </v-flex>
               <v-flex class="pa-1">
                 <v-text-field v-model="editedItem.State" label="Reference"></v-text-field>
               </v-flex>
               <v-flex class="pa-1">
-                <v-text-field v-model="editedItem.Zip" label="Branch"></v-text-field>
+                <v-combobox
+                  v-model="selectBranch"
+                  :items="itemsBranch"
+                  label="Branch"
+                  item-text="text"
+                  item-value="vaue"
+                ></v-combobox>
+                <!-- <v-text-field v-model="editedItem.Zip" label="Branch"></v-text-field> -->
               </v-flex>
             </v-layout>
             <v-layout>
@@ -32,13 +49,18 @@
                 <v-text-field v-model="editedItem.ContactPerson" label="Salesman"></v-text-field>
               </v-flex>
               <v-flex lg2 class="pa-1">
-                <v-text-field v-model="editedItem.Email" label="Currency"></v-text-field>
+                <v-combobox
+                  v-model="selectCurrency"
+                  :items="itemsCurrency"
+                  label="Currency"
+                  item-text="text"
+                  item-value="vaue"
+                ></v-combobox>
               </v-flex>
-             
             </v-layout>
             <v-layout>
               <v-flex lg12 class="pa-1">
-                <table-inline :objData="this.itemsProduct" v-on:childToParent="onChildClick" />
+                <table-inline :objData="this.itemsBranch" v-on:childToParent="onChildClick" />
               </v-flex>
             </v-layout>
             <v-layout>
@@ -71,41 +93,35 @@ export default {
   },
   data() {
     return {
+      DateCreated: "",
+      ExpiryDate: "",
+      autoCompelete: "",
       editedItem: {},
       defaultItem: {},
-      selectProduct: null,
-      itemsProduct: [],
+      selectBranch: null,
+      itemsBranch: [],
 
-      Product: "",
-      Quantity: "",
-      Price: "",
-      Discount: 0,
-      Total: 0,
-      validation: [
-        { requiredName: true },
-        { requiredQuantity: true },
-        { requiredPrice: true },
-        { requiredProduct: true }
-      ],
-      table_subtotal: 0,
-      table_total: 0,
-      table_tax: 5,
+      selectCurrency: null,
+      itemsCurrency: [],
+
+      
       tableRow: []
     };
   },
   watch: {},
   mounted: function() {
-    this.GetSettingCountries();
+    this.getGroupBranches();
+    this.getCurrencies();
   },
   created: function() {},
   methods: {
-    GetSettingCountries() {
+    getGroupBranches() {
       axios({
         method: "get",
-        url: this.$urlApplication + "GeneralWarehouse/GetSettingCountries"
+        url: this.$urlApplication + "SaleQuotation/GetGroupBranches"
       })
         .then(res => {
-          this.itemsProduct = [];
+          this.itemsBranch = [];
           var isTrue = true;
           for (let items of res.data) {
             var result = {
@@ -113,16 +129,42 @@ export default {
               text: items.text
             };
             if (isTrue) {
-              this.selectProduct = result;
+              this.selectBranch = result;
               isTrue = false;
             }
-            this.itemsProduct.push(result);
+            this.itemsBranch.push(result);
           }
         })
         .catch(error => {});
     },
+    getCurrencies() {
+      axios({
+        method: "get",
+        url: this.$urlApplication + "SaleQuotation/GetCurrencies"
+      })
+        .then(res => {
+          this.itemsCurrency = [];
+          var isTrue = true;
+          for (let items of res.data) {
+            var result = {
+              value: items.value,
+              text: items.text
+            };
+            if (isTrue) {
+              this.selectCurrency = result;
+              isTrue = false;
+            }
+            this.itemsCurrency.push(result);
+          }
+        })
+        .catch(error => {});
+    },
+
     onChildClick(value) {
       this.tableRow = value;
+    },
+    onChildClickAutoCompelete(value) {
+      this.autoCompelete = value;
     }
   }
 };

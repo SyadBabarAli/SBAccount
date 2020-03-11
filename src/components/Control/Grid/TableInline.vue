@@ -97,10 +97,10 @@ export default {
       Discount: 0,
       Total: 0,
       validation: [
-        { requiredName: true },
-        { requiredQuantity: true },
-        { requiredPrice: true },
-        { requiredProduct: true }
+        { requiredName: false },
+        { requiredQuantity: false },
+        { requiredPrice: false },
+        { requiredProduct: false }
       ],
       table_subtotal: 0,
       table_total: 0,
@@ -258,6 +258,7 @@ export default {
     // This is referenced in the <template> call in the parent. The second parameter is the payload.
     emitToParent(event) {
       this.$emit("childToParent", this.tableRowCompelete);
+      debugger
     },
 
     preventNumericInput(obj) {

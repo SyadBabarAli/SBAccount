@@ -62,9 +62,9 @@ export default {
   },
 
   methods: {
-    emitToParent(event) {
-      this.$emit("childToParent", this.search);
-    },
+    // emitToParent(event) {
+    //   this.$emit("childToParent", this.search);
+    // },
     fillData(search) {
       axios({
         method: "get",
