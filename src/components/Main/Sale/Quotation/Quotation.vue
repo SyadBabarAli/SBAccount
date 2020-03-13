@@ -5,67 +5,158 @@
         <v-layout>
           <v-flex lg12>
             <v-card-title class="headline grey lighten-3 pa-1 ma-0" primary-title>Sale Quotations</v-card-title>
-            <v-layout>
-              <v-flex lg2 class="pa-1">
-                <!-- Autocomplete -->
-                Customer Name - {{this.autoCompelete}}
-                <auto-complete
-                  :isAsync="true"
-                  :apiUrl="'SaleQuotation/GetCustomer?pSearch='"
-                  v-on:input="onChildClickAutoCompelete"
-                />
-                <!-- <v-text-field v-model="editedItem.Name" label="Customer"></v-text-field> -->
-              </v-flex>
-              <v-flex class="pa-1">
-                <v-text-field v-model="editedItem.AddressLine1" label="Number"></v-text-field>
-              </v-flex>
-              <v-flex class="pa-1">
-                <input type="date" v-model="DateCreated" />
+            <v-btn flat @click="post">save</v-btn>
 
-                <!-- <v-text-field v-model="editedItem.AddressLine2" label="Date"></v-text-field> -->
-              </v-flex>
-              <v-flex class="pa-1">
-                <input type="date" v-model="ExpiryDate" />
-
-                <!-- <date-picker /> -->
-                <!-- <v-text-field v-model="editedItem.City" label="Expiry Date"></v-text-field> -->
-              </v-flex>
-              <v-flex class="pa-1">
-                <v-text-field v-model="editedItem.State" label="Reference"></v-text-field>
-              </v-flex>
-              <v-flex class="pa-1">
-                <v-combobox
-                  v-model="selectBranch"
-                  :items="itemsBranch"
-                  label="Branch"
-                  item-text="text"
-                  item-value="vaue"
-                ></v-combobox>
-                <!-- <v-text-field v-model="editedItem.Zip" label="Branch"></v-text-field> -->
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex lg2 class="pa-1">
-                <v-text-field v-model="editedItem.ContactPerson" label="Salesman"></v-text-field>
-              </v-flex>
-              <v-flex lg2 class="pa-1">
-                <v-combobox
-                  v-model="selectCurrency"
-                  :items="itemsCurrency"
-                  label="Currency"
-                  item-text="text"
-                  item-value="vaue"
-                ></v-combobox>
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex lg12 class="pa-1">
-                <table-inline :objData="this.itemsBranch" v-on:childToParent="onChildClick" />
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex lg12 class="pa-0">{{this.tableRow}}</v-flex>
-            </v-layout>
+            <v-card-title>
+              <v-toolbar-title>Details</v-toolbar-title>
+              <v-divider class="mx-2" inset vertical></v-divider>
+              <v-spacer></v-spacer>
+              <v-text-field
+                v-model="search"
+                append-icon="search"
+                label="Search"
+                single-line
+                hide-details
+              ></v-text-field>
+              <v-dialog
+                v-model="dialog"
+                max-width="500px"
+                scrollable
+                persistent
+                fullscreen
+                hide-overlay
+              >
+                <v-btn slot="activator" color="primary" dark class="mb-2">Add</v-btn>
+                <v-card>
+                  <v-toolbar dark color="primary" dense>
+                    <v-btn icon dark @click="close">
+                      <v-icon>close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                      <v-btn flat @click="post" v-show="this.editedIndex === -1 ? true : false">save</v-btn>
+                      <v-btn
+                        flat
+                        @click="put"
+                        v-show="this.editedIndex === -1 ? false : true"
+                      >update</v-btn>
+                      <v-btn flat @click="clear">clear</v-btn>
+                      <v-btn flat @click="close">cancel</v-btn>
+                    </v-toolbar-items>
+                  </v-toolbar>
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-card class="elevation-10">
+                        <v-card-title
+                          class="headline grey lighten-3 pa-1 ma-0"
+                          primary-title
+                        >Sale Quotation</v-card-title>
+                        <v-divider></v-divider>
+                        <v-layout>
+                          <v-flex lg2 class="pa-1">
+                            Customer Name
+                            <br />
+                            <auto-complete
+                              :isAsync="true"
+                              :apiUrl="'SaleQuotation/GetCustomer?pSearch='"
+                              v-on:input="onChildClickAutoCompelete"
+                            />
+                          </v-flex>
+                          <v-flex class="pa-1">
+                            Number
+                            <br />
+                            <input v-model="editedItem.Number" />
+                          </v-flex>
+                          <v-flex class="pa-1">
+                            Date Sale
+                            <br />
+                            <input type="date" v-model="editedItem.Number" />
+                          </v-flex>
+                          <v-flex class="pa-1">
+                            Expiry Date
+                            <br />
+                            <input type="date" v-model="editedItem.ExpiryDate" />
+                          </v-flex>
+                          <v-flex class="pa-1">
+                            Reference
+                            <br />
+                            <input v-model="editedItem.Reference" />
+                          </v-flex>
+                          <v-flex class="pa-1">
+                            Branch
+                            <br />
+                            <select v-model="editedItem.selectBranch">
+                              <option
+                                v-for="option in editedItem.itemsBranch"
+                                v-bind:value="option.value"
+                              >{{ option.text }}</option>
+                            </select>
+                          </v-flex>
+                        </v-layout>
+                        <v-layout>
+                          <v-flex lg2 class="pa-1">
+                            <v-text-field v-model="editedItem.SalesManId" label="Salesman"></v-text-field>
+                          </v-flex>
+                          <v-flex lg2 class="pa-1">
+                            Currency
+                            <br />
+                            <select v-model="editedItem.selectCurrency">
+                              <option
+                                v-for="option in editedItem.itemsCurrency"
+                                v-bind:value="option.value"
+                              >{{ option.text }}</option>
+                            </select>
+                          </v-flex>
+                        </v-layout>
+                        <v-layout>
+                          <v-flex lg12 class="pa-1">
+                            <table-inline
+                              :objData="editedItem.itemsProduct"
+                              v-on:childToParent="onChildClick"
+                            />
+                          </v-flex>
+                        </v-layout>
+                      </v-card>
+                    </v-container>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+            </v-card-title>
+            <v-data-table
+              :headers="headers"
+              :items="listOfRecords"
+              class="elevation-3"
+              :search="search"
+              :loading="isLoading"
+            >
+              <template slot="items" slot-scope="props">
+                <td class="text-xs-left">{{ props.item.Number }}</td>
+                <td class="text-xs-left">{{ props.item.DateSale }}</td>
+                <td class="text-xs-left">{{ props.item.CustomerName }}</td>
+                <td class="text-xs-left">{{ props.item.BranchName }}</td>
+                <td class="text-xs-left">{{ props.item.SalePersonName }}</td>
+                <td class="text-xs-left">{{ props.item.ExpiryDate }}</td>
+                <td class="text-xs-left">{{ props.item.GrossAmount }}</td>
+                <td class="text-xs-left">{{ props.item.NetAmount }}</td>
+                <td class="text-xs-left">{{ props.item.StatusName }}</td>
+                <td class="justify-center layout px-0">
+                  <v-btn
+                    color="primary"
+                    fab
+                    small
+                    dark
+                    style="height:22px;width:22px;font-size:13px;"
+                    @click="editItem(props.item)"
+                  >
+                    <v-icon style="font-size:13px">edit</v-icon>
+                  </v-btn>
+                  <v-btn color="red" fab small dark style="height:22px;width:22px;font-size:13px;">
+                    <v-icon style="font-size:13px" @click="deleteItem(props.item)">delete</v-icon>
+                  </v-btn>
+                </td>
+              </template>
+            </v-data-table>
           </v-flex>
         </v-layout>
         <v-divider light></v-divider>
@@ -93,27 +184,80 @@ export default {
   },
   data() {
     return {
-      DateCreated: "",
-      ExpiryDate: "",
-      autoCompelete: "",
-      editedItem: {},
-      defaultItem: {},
-      selectBranch: null,
-      itemsBranch: [],
+      editedItem: {
+        DateCreated: "03/11/2020",
+        ExpiryDate: "03/11/2020",
+        Number: "SQ-101",
+        Reference: "First customer",
+        autoCompelete: "",
+        selectBranch: null,
+        itemsBranch: [],
 
-      selectCurrency: null,
-      itemsCurrency: [],
+        selectCurrency: null,
+        itemsCurrency: [],
 
-      
-      tableRow: []
+        selectProduct: null,
+        itemsProduct: [],
+
+        saleQuotationDetail: []
+      },
+
+      dialog: false,
+      search: "",
+      headers: [
+        { text: "Number", value: "Number" },
+        { text: "DateSale", value: "DateSale" },
+
+        { text: "CustomerName", value: "CustomerName" },
+        { text: "BranchName", value: "BranchName" },
+
+        { text: "SalePersonName", value: "SalePersonName" },
+
+        { text: "ExpiryDate", value: "ExpiryDate" },
+
+        { text: "GrossAmount", value: "GrossAmount" },
+        { text: "NetAmount", value: "NetAmount" },
+        { text: "StatusName", value: "StatusName" }
+
+        // { text: "CurrencyId", value: "CurrencyId" },
+        //   { text: "Term", value: "Term" },
+        //   { text: "AttachedId", value: "AttachedId" },
+        //   { text: "IsDeleted", value: "IsDeleted" },
+        //   { text: "IsActive", value: "IsActive" },
+        //   { text: "Created", value: "Created" },
+        //   { text: "CreatedBy", value: "CreatedBy" },
+        //   { text: "Modified", value: "Modified" },
+        //   { text: "ModifiedBy", value: "ModifiedBy" }
+      ],
+      isLoading: true,
+      IsSnackBar: false,
+      listOfRecords: [],
+      editedIndex: -1
+      // editedItem: {},
+      // defaultItem: {}
     };
   },
-  watch: {},
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Quotation" : "Edit Quotation";
+    }
+  },
+  watch: {
+    dialog(val) {
+      var isTrue = val;
+      if (isTrue) {
+        this.dialogOpen();
+      } else {
+        isTrue || this.close();
+      }
+    }
+  },
   mounted: function() {
+    this.tableLoad();
     this.getGroupBranches();
     this.getCurrencies();
+    this.getProducts();
   },
-  created: function() {},
   methods: {
     getGroupBranches() {
       axios({
@@ -121,7 +265,7 @@ export default {
         url: this.$urlApplication + "SaleQuotation/GetGroupBranches"
       })
         .then(res => {
-          this.itemsBranch = [];
+          this.editedItem.itemsBranch = [];
           var isTrue = true;
           for (let items of res.data) {
             var result = {
@@ -129,10 +273,10 @@ export default {
               text: items.text
             };
             if (isTrue) {
-              this.selectBranch = result;
+              this.editedItem.selectBranch = result;
               isTrue = false;
             }
-            this.itemsBranch.push(result);
+            this.editedItem.itemsBranch.push(result);
           }
         })
         .catch(error => {});
@@ -151,20 +295,154 @@ export default {
               text: items.text
             };
             if (isTrue) {
-              this.selectCurrency = result;
+              this.editedItem.selectCurrency = result;
               isTrue = false;
             }
-            this.itemsCurrency.push(result);
+            this.editedItem.itemsCurrency.push(result);
           }
         })
         .catch(error => {});
     },
 
+    getProducts() {
+      axios({
+        method: "get",
+        url: this.$urlApplication + "SaleQuotation/GetProducts"
+      })
+        .then(res => {
+          this.editedItem.itemsProduct = [];
+          var isTrue = true;
+          for (let items of res.data) {
+            var result = {
+              value: items.value,
+              text: items.text
+            };
+            if (isTrue) {
+              this.editedItem.selectProduct = result;
+              isTrue = false;
+            }
+            this.editedItem.itemsProduct.push(result);
+          }
+        })
+        .catch(error => {});
+    },
+    post() {
+      var obj = this.editedItem;
+      obj.CustomerId = this.editedItem.autoCompelete.split("~")[1];
+      obj.BranchId = this.editedItem.selectBranch.value;
+      obj.CurrencyId = this.editedItem.selectCurrency.value;
+      obj.SalesManId = 1;
+      obj.CompanyId = 1;
+
+      axios({
+        method: "post",
+        url: this.$urlApplication + "SaleQuotation/Post",
+        data: obj
+      })
+        .then(res => {
+          this.IsSnackBar = false;
+          this.tableLoad();
+          this.close();
+        })
+        .catch(error => {
+          this.IsSnackBar = false;
+        });
+    },
     onChildClick(value) {
-      this.tableRow = value;
+      this.editedItem.saleQuotationDetail = value.tableRow;
     },
     onChildClickAutoCompelete(value) {
-      this.autoCompelete = value;
+      this.editedItem.autoCompelete = value;
+      this.editedItem.CustomerId = value.split("~")[1];
+    },
+
+    async tableLoad() {
+      this.isLoading = true;
+      const res = await axios
+        .get(this.$urlApplication + "SaleQuotation/GetSaleQuotationes")
+        .then(res => {
+          this.listOfRecords = res.data;
+          this.isLoading = false;
+        })
+        .catch(error => {
+          this.isLoading = false;
+        });
+    },
+
+    put() {
+      var obj = this.editedItem;
+      obj.CompanyId = 1;
+      obj.SaleQuotationId = this.editedItem.SaleQuotationId;
+      obj.Name = this.editedItem.Name;
+      obj.ProductId = this.editedItem.tableRow.Product.value;
+      this.IsSnackBar = true;
+
+      axios({
+        method: "put",
+        url:
+          this.$urlApplication + "SaleQuotation/Put?id=" + obj.SaleQuotationId,
+        data: obj
+      })
+        .then(res => {
+          this.IsSnackBar = false;
+          this.tableLoad();
+          this.close();
+        })
+        .catch(error => {
+          this.IsSnackBar = false;
+        });
+    },
+
+    delete(id) {
+      var pId = id;
+      this.IsSnackBar = true;
+      axios({
+        method: "delete",
+        url: this.$urlApplication + "SaleQuotation/Delete?companyId=1&id=" + pId
+      })
+        .then(res => {
+          this.IsSnackBar = false;
+          this.tableLoad();
+        })
+        .catch(error => {
+          this.IsSnackBar = false;
+        });
+    },
+    clear() {
+      this.editedItem.SaleQuotationName = "";
+      this.editedItem.Name = "";
+    },
+    editItem(item) {
+      var obj = item;
+
+      this.editedIndex = this.listOfRecords.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+    deleteItem(item) {
+      const index = this.listOfRecords.indexOf(item);
+      confirm("Are you sure you want to delete this item?") &&
+        this.delete(item.SaleQuotationId);
+    },
+    dialogOpen() {
+      if (this.editedItem.SaleQuotationId == undefined) {
+        //When click add
+        this.editedItem.Active = true;
+        this.clear();
+      } else {
+        //Edite Record
+        //this.changeSaleQuotations(this.selectSaleQuotations);
+      }
+    },
+    close() {
+      if (!this.dialog) {
+        this.clear();
+      }
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
     }
   }
 };

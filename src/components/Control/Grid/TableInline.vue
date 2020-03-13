@@ -2,7 +2,7 @@
   <div>
     <table class="v-table table-bordered">
       <thead>
-        <th class="text-xs-left caption">Product</th>
+        <th class="text-xs-left caption">ProductId</th>
         <th class="text-xs-left caption">Quantiy</th>
         <th class="text-xs-left caption">Price</th>
         <th class="text-xs-left caption">Discount</th>
@@ -11,7 +11,7 @@
       </thead>
       <tbody>
         <tr v-for="(items, index) in tableRow" :key="index">
-          <td>{{items.Product.text}}</td>
+          <td>{{items.ProductId.text}}</td>
           <td>{{items.Quantity}}</td>
           <td>{{items.Price}}</td>
           <td>{{items.Discount}}</td>
@@ -179,13 +179,13 @@ export default {
       this.refreshData();
     },
     addNewRow() {
-      var Product = this.selectProduct.value;
+      var ProductId = this.selectProduct.value;
       var Quantity = this.Quantity;
       var Price = this.Price;
       var Discount = this.Discount;
       var Total = this.Total;
 
-      if (Product == undefined || Product.length == 0) {
+      if (ProductId == undefined || ProductId.length == 0) {
         this.validation.requiredProduct = false;
       } else {
         this.validation.requiredProduct = true;
@@ -207,7 +207,7 @@ export default {
         this.validation.requiredPrice
       ) {
         this.tableRow.push({
-          Product: this.selectProduct,
+          ProductId: ProductId,
           Price: this.Price,
           Quantity: this.Quantity,
           Discount: this.Discount,
@@ -258,7 +258,6 @@ export default {
     // This is referenced in the <template> call in the parent. The second parameter is the payload.
     emitToParent(event) {
       this.$emit("childToParent", this.tableRowCompelete);
-      debugger
     },
 
     preventNumericInput(obj) {

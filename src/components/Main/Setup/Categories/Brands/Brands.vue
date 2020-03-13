@@ -218,6 +218,7 @@ export default {
       obj.CompanyId = 1;
       obj.CategoryBrandId = this.editedItem.CategoryBrandId;
       obj.Name = this.editedItem.Name;     
+      obj.ProductId = this.editedItem.tableRow.Product.value;
       this.IsSnackBar = true;
 
       axios({
