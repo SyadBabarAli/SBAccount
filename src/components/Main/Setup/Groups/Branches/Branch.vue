@@ -260,9 +260,9 @@ export default {
     },
     editItem(item) {
       var obj = item;
-
-      this.editedIndex = this.listOfRecords.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+debugger
+      // this.editedIndex = this.listOfRecords.indexOf(item);
+      // this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem(item) {

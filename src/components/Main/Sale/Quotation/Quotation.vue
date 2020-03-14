@@ -111,6 +111,9 @@
                         </v-layout>
                         <v-layout>
                           <v-flex lg12 class="pa-1">
+                            Babar
+                            {{this.editedItem.selectProduct}}
+                            {{this.editedItem.itemsProduct}}
                             <table-inline
                               :objData="editedItem.itemsProduct"
                               v-on:childToParent="onChildClick"
@@ -217,17 +220,9 @@ export default {
 
         { text: "GrossAmount", value: "GrossAmount" },
         { text: "NetAmount", value: "NetAmount" },
-        { text: "StatusName", value: "StatusName" }
+        { text: "StatusName", value: "StatusName" },
 
-        // { text: "CurrencyId", value: "CurrencyId" },
-        //   { text: "Term", value: "Term" },
-        //   { text: "AttachedId", value: "AttachedId" },
-        //   { text: "IsDeleted", value: "IsDeleted" },
-        //   { text: "IsActive", value: "IsActive" },
-        //   { text: "Created", value: "Created" },
-        //   { text: "CreatedBy", value: "CreatedBy" },
-        //   { text: "Modified", value: "Modified" },
-        //   { text: "ModifiedBy", value: "ModifiedBy" }
+        { text: "Action", value: "1" }
       ],
       isLoading: true,
       IsSnackBar: false,
@@ -414,7 +409,39 @@ export default {
     },
     editItem(item) {
       var obj = item;
-
+      //1
+      for (var items of this.editedItem.itemsProduct) {
+        if (obj.ProductId == items.value) {
+          debugger
+          this.editedItem.selectProduct = {
+            value: items.value,
+            text: items.text
+          };
+          break;
+        }
+      }
+      // this.editedItem.SaleQuotationId = obj.SaleQuotationId;
+      // this.editedItem.CompanyId = obj.CompanyId;
+      // this.editedItem.CustomerId = obj.CustomerId;
+      // this.editedItem.Number = obj.Number;
+      // this.editedItem.DateSale = obj.DateSale;
+      // this.editedItem.ExpiryDate = obj.ExpiryDate;
+      // this.editedItem.Reference = obj.Reference;
+      // this.editedItem.BranchId = obj.BranchId;
+      // this.editedItem.SalePersonId = obj.SalePersonId;
+      // this.editedItem.CurrencyId = obj.CurrencyId;
+      // this.editedItem.Term = obj.Term;
+      // this.editedItem.AttachedId = obj.AttachedId;
+      // this.editedItem.IsDeleted = obj.IsDeleted;
+      // this.editedItem.IsActive = obj.IsActive;
+      // this.editedItem.Created = obj.Created;
+      // this.editedItem.CreatedBy = obj.CreatedBy;
+      // this.editedItem.Modified = obj.Modified;
+      // this.editedItem.ModifiedBy = obj.ModifiedBy;
+      // this.editedItem.GrossAmount = obj.GrossAmount;
+      // this.editedItem.NetAmount = obj.NetAmount;
+      // this.editedItem.SettingStatusId = obj.SettingStatusId;
+      debugger;
       this.editedIndex = this.listOfRecords.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
