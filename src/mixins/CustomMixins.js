@@ -14,6 +14,48 @@ export const mixins = {
   },
 
   methods: {
+
+    refillSelect(id, items) {
+      var pId = id,
+        pItems = items,
+        result = null;
+      for (var items of pItems) {
+        if (pId == items.value) {
+          result = {
+            value: items.value,
+            text: items.text
+          };
+          break;
+        }
+      }
+      return result;
+    },
+    async refillSelectOption(url) {
+      var pUrl = url;
+      var result = {
+        selected: null,
+        option: []
+      };
+      const res = await axios
+        .get(url)
+        .then(res => {
+          result.option = [];
+          var isTrue = true;
+          for (let items of res.data) {
+            var objSingleSelect = {
+              value: items.value,
+              text: items.text
+            };
+            if (isTrue) {
+              result.selected = objSingleSelect;
+              isTrue = false;
+            }
+            result.option.push(objSingleSelect);
+          }
+        })
+        .catch(error => { });
+      return result;
+    },
     //Inlin Grid
     isRequiredField(pObj, pRequired) {
       var obj = pObj;

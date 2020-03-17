@@ -32,17 +32,8 @@ export default {
   name: "autocomplete",
   template: "#autocomplete",
   props: {
-    // items: {
-    //   type: Array,
-    //   required: false,
-    //   default: () => []
-    // },
+    Name: "",
     apiUrl: "",
-    //  {
-    //   type: Array,
-    //   required: false,
-    //   default: () => []
-    // },
     isAsync: {
       type: Boolean,
       required: false,
@@ -60,7 +51,13 @@ export default {
       message: ""
     };
   },
+  // watch: {
 
+  // },
+  // mounted: function() {
+  //   this.search = this.name;
+  //   debugger;
+  // },
   methods: {
     // emitToParent(event) {
     //   this.$emit("childToParent", this.search);
@@ -92,7 +89,6 @@ export default {
     onChange() {
       // Let's warn the parent that a change was made
       // this.$emit("input", this.search);
-
       // Is the data given by an outside ajax request?
       if (this.isAsync) {
         this.isLoading = true;
@@ -145,6 +141,9 @@ export default {
     }
   },
   watch: {
+    Name: function() {
+      this.search = this.Name;
+    },
     items: function(val, oldValue) {
       // actually compare them
       if (val.length !== oldValue.length) {
@@ -155,6 +154,7 @@ export default {
   },
   mounted() {
     document.addEventListener("click", this.handleClickOutside);
+    this.search = this.Name;
   },
   destroyed() {
     document.removeEventListener("click", this.handleClickOutside);

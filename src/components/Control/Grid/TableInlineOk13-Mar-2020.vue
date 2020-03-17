@@ -11,15 +11,11 @@
       </thead>
       <tbody>
         <tr v-for="(items, index) in tableRow" :key="index">
-          <td>
-            {{items.ProductName}}
-            <br />
-            {{items.Description}}
-          </td>
+          <td>{{items.ProductId.text}}</td>
           <td>{{items.Quantity}}</td>
           <td>{{items.Price}}</td>
           <td>{{items.Discount}}</td>
-          <td>{{items.Amount}}</td>
+          <td>{{items.Total}}</td>
           <td>
             <v-icon
               style="font-size:18px"
@@ -40,8 +36,6 @@
             >
               <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
             </select>
-            <br />
-            <input v-model="Description" />
           </td>
           <td>
             <input
@@ -74,7 +68,7 @@
             />
           </td>
           <td>
-            <input readonly type="number" min="0" step=".01" v-model="Amount" />
+            <input readonly type="number" min="0" step=".01" v-model="Total" />
           </td>
           <td>
             <v-icon
@@ -92,16 +86,16 @@
 </template>
 <script>
 export default {
-  props: ["objData", "tableRows"],
+  props: ["objData"],
   data() {
     return {
       selectProduct: null,
       itemsProduct: null,
-      Description: "",
+
       Quantity: "",
       Price: "",
       Discount: 0,
-      Amount: 0,
+      Total: 0,
       validation: [
         { requiredName: false },
         { requiredQuantity: false },
@@ -117,12 +111,8 @@ export default {
   },
   mounted: function() {
     this.itemsProduct = this.objData;
-    this.tableRow = this.tableRows;
   },
   watch: {
-    tableRows: function() {
-      this.tableRow = this.tableRows;
-    },
     objData: function() {
       this.itemsProduct = this.objData;
     },
@@ -149,7 +139,7 @@ export default {
     calculateTotal() {
       var subtotal, total;
       subtotal = this.tableRow.reduce(function(sum, product) {
-        var lineTotal = parseFloat(product.Amount);
+        var lineTotal = parseFloat(product.Total);
         if (!isNaN(lineTotal)) {
           return sum + lineTotal;
         }
@@ -174,7 +164,7 @@ export default {
         // //Discount Calculation
         total = total - total * (parseFloat(Discount) / 100);
         if (!isNaN(total)) {
-          items.Amount = total.toFixed(2);
+          items.Total = total.toFixed(2);
         }
         this.calculateTotal();
       }
@@ -189,13 +179,11 @@ export default {
       this.refreshData();
     },
     addNewRow() {
-      var ProductId = 0;
-      var ProductName = "";
+      var ProductId = this.selectProduct.value;
       var Quantity = this.Quantity;
       var Price = this.Price;
       var Discount = this.Discount;
-      var Amount = this.Amount;
-      var Description = this.Description;
+      var Total = this.Total;
 
       if (ProductId == undefined || ProductId.length == 0) {
         this.validation.requiredProduct = false;
@@ -218,16 +206,12 @@ export default {
         this.validation.requiredQuantity &&
         this.validation.requiredPrice
       ) {
-        ProductName = this.selectProduct.text;
-        ProductId = this.selectProduct.value;
         this.tableRow.push({
           ProductId: ProductId,
-          ProductName: ProductName,
-          Description: Description,
           Price: this.Price,
           Quantity: this.Quantity,
           Discount: this.Discount,
-          Amount: this.Amount
+          Total: this.Total
         });
         this.calculateTotal();
         this.calculateLineTotal(this.tableRow);
@@ -240,10 +224,9 @@ export default {
 
         this.Discount = "";
         this.Name = "";
-        this.Description = "";
         this.Price = "";
         this.Quantity = "";
-        this.Amount = "";
+        this.Total = "";
         this.refreshData();
       }
     },
@@ -329,63 +312,14 @@ table.v-table thead th:not(:first-child) {
   border: 1px solid red;
   border-radius: 4px;
 }
-select {
-  -webkit-writing-mode: horizontal-tb !important;
-  text-rendering: auto;
-  color: -internal-light-dark-color(black, white);
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  -webkit-appearance: menulist;
-  box-sizing: border-box;
-  align-items: center;
-  white-space: pre;
-  -webkit-rtl-ordering: logical;
-  background-color: -internal-light-dark-color(white, black);
-  cursor: default;
-  margin: 0em;
-  font: 400 13.3333px Arial;
-  border-radius: 0px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(169, 169, 169);
-  border-image: initial;
-}
-input {
-  -webkit-writing-mode: horizontal-tb !important;
-  text-rendering: auto;
-  color: -internal-light-dark-color(black, white);
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  -webkit-appearance: textfield;
-  background-color: -internal-light-dark-color(white, black);
-  -webkit-rtl-ordering: logical;
-  cursor: text;
-  margin: 0em;
-  font: 400 13.3333px Arial;
-  padding: 1px 0px;
-  border-width: 2px;
-  border-style: inset;
-  border-color: initial;
-  border-image: initial;
-}
-/* input,
+input,
 select {
   border: 1px solid gray;
   border-radius: 4px;
   width: 100%;
   -moz-appearance: none;
   -webkit-appearance: none;
-} */
+}
 
 /* select.selector {
   width: 100px;

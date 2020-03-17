@@ -5,8 +5,6 @@
         <v-layout>
           <v-flex lg12>
             <v-card-title class="headline grey lighten-3 pa-1 ma-0" primary-title>Sale Quotations</v-card-title>
-            <v-btn flat @click="post">save</v-btn>
-
             <v-card-title>
               <v-toolbar-title>Details</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
@@ -51,17 +49,18 @@
                         <v-card-title
                           class="headline grey lighten-3 pa-1 ma-0"
                           primary-title
-                        >Sale Quotation</v-card-title>
+                        >Sale Quotation - {{this.editedItem.StatusName}} - {{this.editedItem.StatusName}}</v-card-title>
                         <v-divider></v-divider>
                         <v-layout>
                           <v-flex lg2 class="pa-1">
                             Customer Name
-                            <br />
                             <auto-complete
+                              :Name="this.editedItem.CustomerName"
                               :isAsync="true"
                               :apiUrl="'SaleQuotation/GetCustomer?pSearch='"
                               v-on:input="onChildClickAutoCompelete"
                             />
+                            <input readonly v-model="editedItem.CustomerId" style="display:none;" />
                           </v-flex>
                           <v-flex class="pa-1">
                             Number
@@ -71,12 +70,36 @@
                           <v-flex class="pa-1">
                             Date Sale
                             <br />
-                            <input type="date" v-model="editedItem.Number" />
+                            <!-- {{this.editItem.DateSale}}
+                          
+                            />
+                            New-->
+                            <!-- <input
+                              type="date"
+                              :value="editedItem.DateSale && editedItem.DateSale.toISOString().split('T')[0]"
+                              v-on:input="editedItem.DateSale = $event.target.valueAsDate"
+                            />-->
+                            <input
+                              type="date"
+                              :value="DateSale && DateSale.toISOString().split('T')[0]"
+                              v-on:input="DateSale = $event.target.valueAsDate"
+                            />
+                            <!-- <v-btn
+                              small
+                              color="colorLight"
+                              class="colorDark white--text font-weight-light"
+                              @click="setMyDateToToday"
+                            />-->
                           </v-flex>
                           <v-flex class="pa-1">
+                            <!-- <v-btn flat color="silver" @click="setDate">Set Date</v-btn> -->
                             Expiry Date
                             <br />
-                            <input type="date" v-model="editedItem.ExpiryDate" />
+                            <input
+                              type="date"
+                              :value="ExpiryDate && ExpiryDate.toISOString().split('T')[0]"
+                              v-on:input="ExpiryDate = $event.target.valueAsDate"
+                            />
                           </v-flex>
                           <v-flex class="pa-1">
                             Reference
@@ -86,36 +109,41 @@
                           <v-flex class="pa-1">
                             Branch
                             <br />
-                            <select v-model="editedItem.selectBranch">
+                            <select v-model="selectBranch">
                               <option
-                                v-for="option in editedItem.itemsBranch"
-                                v-bind:value="option.value"
+                                v-for="option in itemsBranch"
+                                v-bind:value="option"
                               >{{ option.text }}</option>
                             </select>
                           </v-flex>
                         </v-layout>
                         <v-layout>
                           <v-flex lg2 class="pa-1">
-                            <v-text-field v-model="editedItem.SalesManId" label="Salesman"></v-text-field>
+                            Sales Person
+                            <br />
+                            <select v-model="selectSalePerson">
+                              <option
+                                v-for="option in itemsSalePerson"
+                                v-bind:value="option"
+                              >{{ option.text }}</option>
+                            </select>
                           </v-flex>
                           <v-flex lg2 class="pa-1">
                             Currency
                             <br />
-                            <select v-model="editedItem.selectCurrency">
+                            <select v-model="selectCurrency">
                               <option
-                                v-for="option in editedItem.itemsCurrency"
-                                v-bind:value="option.value"
+                                v-for="option in itemsCurrency"
+                                v-bind:value="option"
                               >{{ option.text }}</option>
                             </select>
                           </v-flex>
                         </v-layout>
                         <v-layout>
                           <v-flex lg12 class="pa-1">
-                            Babar
-                            {{this.editedItem.selectProduct}}
-                            {{this.editedItem.itemsProduct}}
                             <table-inline
-                              :objData="editedItem.itemsProduct"
+                              :objData="itemsProduct"
+                              :tableRows="listOfRecordDetails"
                               v-on:childToParent="onChildClick"
                             />
                           </v-flex>
@@ -174,8 +202,10 @@ import axios from "axios";
 import { mixins } from "../../../../mixins/CustomMixins";
 import ButtonSmall from "../../../../components/control/ButtonSmall";
 import TableInline from "../../../../components/control/Grid/TableInline";
-import DatePicker from "../../../../components/control/DatePickerFrom";
+//import DatePicker from "../../../../components/control/DatePickerFrom";
 import AutoComplete from "../../../../components/control/AutoCompelete/AutoCompelete";
+import DatePicker from "../../../../components/control/DatePicker/DatePicker";
+import moment from "moment";
 
 export default {
   mixins: [mixins],
@@ -187,46 +217,49 @@ export default {
   },
   data() {
     return {
+      DateSale: new Date(),
+      ExpiryDate: new Date(),
+      // data: {
+      //   message: "Hello Vue.js!",
+      //   DateSale: new Date("2011-04-11T10:20:30Z")
+      // },
       editedItem: {
-        DateCreated: "03/11/2020",
-        ExpiryDate: "03/11/2020",
+        DateSale: new Date(),
+        ExpiryDate: new Date(),
         Number: "SQ-101",
         Reference: "First customer",
         autoCompelete: "",
-        selectBranch: null,
-        itemsBranch: [],
 
-        selectCurrency: null,
-        itemsCurrency: [],
-
-        selectProduct: null,
-        itemsProduct: [],
-
-        saleQuotationDetail: []
+        saleQuotationDetail: [],
+        tableDetail: []
       },
+      selectSalePerson: null,
+      itemsSalePerson: [],
+      selectCurrency: null,
+      itemsCurrency: [],
+      selectProduct: null,
+      itemsProduct: [],
+      selectBranch: null,
+      itemsBranch: [],
 
       dialog: false,
       search: "",
       headers: [
         { text: "Number", value: "Number" },
         { text: "DateSale", value: "DateSale" },
-
         { text: "CustomerName", value: "CustomerName" },
         { text: "BranchName", value: "BranchName" },
-
         { text: "SalePersonName", value: "SalePersonName" },
-
         { text: "ExpiryDate", value: "ExpiryDate" },
-
         { text: "GrossAmount", value: "GrossAmount" },
         { text: "NetAmount", value: "NetAmount" },
         { text: "StatusName", value: "StatusName" },
-
         { text: "Action", value: "1" }
       ],
       isLoading: true,
       IsSnackBar: false,
       listOfRecords: [],
+      listOfRecordDetails: [],
       editedIndex: -1
       // editedItem: {},
       // defaultItem: {}
@@ -252,83 +285,56 @@ export default {
     this.getGroupBranches();
     this.getCurrencies();
     this.getProducts();
+    this.getSalePersons();
   },
   methods: {
-    getGroupBranches() {
-      axios({
-        method: "get",
-        url: this.$urlApplication + "SaleQuotation/GetGroupBranches"
-      })
-        .then(res => {
-          this.editedItem.itemsBranch = [];
-          var isTrue = true;
-          for (let items of res.data) {
-            var result = {
-              value: items.value,
-              text: items.text
-            };
-            if (isTrue) {
-              this.editedItem.selectBranch = result;
-              isTrue = false;
-            }
-            this.editedItem.itemsBranch.push(result);
-          }
-        })
-        .catch(error => {});
-    },
-    getCurrencies() {
-      axios({
-        method: "get",
-        url: this.$urlApplication + "SaleQuotation/GetCurrencies"
-      })
-        .then(res => {
-          this.itemsCurrency = [];
-          var isTrue = true;
-          for (let items of res.data) {
-            var result = {
-              value: items.value,
-              text: items.text
-            };
-            if (isTrue) {
-              this.editedItem.selectCurrency = result;
-              isTrue = false;
-            }
-            this.editedItem.itemsCurrency.push(result);
-          }
-        })
-        .catch(error => {});
+    // setMyDateToToday() {
+    //   //      this.DateSale = new Date();
+    //   this.DateSale = new Date("12/19/2012");
+    // },
+    // setDate() {
+    //   this.editItem.DateSale = new Date("2011-04-11T10:20:30Z");
+    // },
+    async getSalePersons() {
+      var result = await this.refillSelectOption(
+        this.$urlApplication + "SaleQuotation/GetSalePersons"
+      );
+      this.selectSalePerson = result.selected;
+      this.itemsSalePerson = result.option;
     },
 
-    getProducts() {
-      axios({
-        method: "get",
-        url: this.$urlApplication + "SaleQuotation/GetProducts"
-      })
-        .then(res => {
-          this.editedItem.itemsProduct = [];
-          var isTrue = true;
-          for (let items of res.data) {
-            var result = {
-              value: items.value,
-              text: items.text
-            };
-            if (isTrue) {
-              this.editedItem.selectProduct = result;
-              isTrue = false;
-            }
-            this.editedItem.itemsProduct.push(result);
-          }
-        })
-        .catch(error => {});
+    async getGroupBranches() {
+      var result = await this.refillSelectOption(
+        this.$urlApplication + "SaleQuotation/GetGroupBranches"
+      );
+      this.selectBranch = result.selected;
+      this.itemsBranch = result.option;
     },
+    async getCurrencies() {
+      var result = await this.refillSelectOption(
+        this.$urlApplication + "SaleQuotation/GetCurrencies"
+      );
+      this.selectCurrency = result.selected;
+      this.itemsCurrency = result.option;
+    },
+
+    async getProducts() {
+      var result = await this.refillSelectOption(
+        this.$urlApplication + "SaleQuotation/GetProducts"
+      );
+      this.selectProduct = result.selected;
+      this.itemsProduct = result.option;
+    },
+
     post() {
       var obj = this.editedItem;
       obj.CustomerId = this.editedItem.autoCompelete.split("~")[1];
-      obj.BranchId = this.editedItem.selectBranch.value;
-      obj.CurrencyId = this.editedItem.selectCurrency.value;
-      obj.SalesManId = 1;
+      obj.BranchId = this.selectBranch.value;
+      obj.CurrencyId = this.selectCurrency.value;
+      obj.SalePersonId = this.selectSalePerson.value;
       obj.CompanyId = 1;
-
+      obj.DateSale = this.DateSale;
+      obj.ExpiryDate = this.ExpiryDate;
       axios({
         method: "post",
         url: this.$urlApplication + "SaleQuotation/Post",
@@ -364,12 +370,32 @@ export default {
         });
     },
 
+    async tableLoadDetail(id) {
+      const res = await axios
+        .get(
+          this.$urlApplication +
+            "SaleQuotation/GetSaleQuotationDetails?id=" +
+            id
+        )
+        .then(res => {
+          this.listOfRecordDetails = res.data;
+          this.editedItem.saleQuotationDetail = res.data;
+        })
+        .catch(error => {});
+    },
+
     put() {
       var obj = this.editedItem;
+      obj.SalePersonId = this.selectSalePerson.value;
+      obj.SettingStatusId = 1;
       obj.CompanyId = 1;
       obj.SaleQuotationId = this.editedItem.SaleQuotationId;
       obj.Name = this.editedItem.Name;
-      obj.ProductId = this.editedItem.tableRow.Product.value;
+      obj.IsDeleted = false;
+      obj.IsActive = true;
+      obj.DateSale = this.DateSale;
+      obj.ExpiryDate = this.ExpiryDate;
+      //obj.ProductId = this.editedItem.tableRow.Product.value;
       this.IsSnackBar = true;
 
       axios({
@@ -403,47 +429,23 @@ export default {
           this.IsSnackBar = false;
         });
     },
-    clear() {
-      this.editedItem.SaleQuotationName = "";
-      this.editedItem.Name = "";
-    },
+
     editItem(item) {
       var obj = item;
       //1
-      for (var items of this.editedItem.itemsProduct) {
-        if (obj.ProductId == items.value) {
-          debugger
-          this.editedItem.selectProduct = {
-            value: items.value,
-            text: items.text
-          };
-          break;
-        }
-      }
-      // this.editedItem.SaleQuotationId = obj.SaleQuotationId;
-      // this.editedItem.CompanyId = obj.CompanyId;
-      // this.editedItem.CustomerId = obj.CustomerId;
-      // this.editedItem.Number = obj.Number;
-      // this.editedItem.DateSale = obj.DateSale;
-      // this.editedItem.ExpiryDate = obj.ExpiryDate;
-      // this.editedItem.Reference = obj.Reference;
-      // this.editedItem.BranchId = obj.BranchId;
-      // this.editedItem.SalePersonId = obj.SalePersonId;
-      // this.editedItem.CurrencyId = obj.CurrencyId;
-      // this.editedItem.Term = obj.Term;
-      // this.editedItem.AttachedId = obj.AttachedId;
-      // this.editedItem.IsDeleted = obj.IsDeleted;
-      // this.editedItem.IsActive = obj.IsActive;
-      // this.editedItem.Created = obj.Created;
-      // this.editedItem.CreatedBy = obj.CreatedBy;
-      // this.editedItem.Modified = obj.Modified;
-      // this.editedItem.ModifiedBy = obj.ModifiedBy;
-      // this.editedItem.GrossAmount = obj.GrossAmount;
-      // this.editedItem.NetAmount = obj.NetAmount;
-      // this.editedItem.SettingStatusId = obj.SettingStatusId;
-      debugger;
+      this.selectBranch = this.refillSelect(obj.BranchId, this.itemsBranch);
+      this.selectCurrency = this.refillSelect(
+        obj.CurrencyId,
+        this.itemsCurrency
+      );
+
+      this.tableLoadDetail(obj.SaleQuotationId);
       this.editedIndex = this.listOfRecords.indexOf(item);
       this.editedItem = Object.assign({}, item);
+      this.editedItem.CustomerId = item.CustomerId;
+      this.editedItem.DateSale = obj.DateSale.split("T")[0];
+      this.editedItem.ExpiryDate = obj.ExpiryDate.split("T")[0];
+      this.editedItem.CustomerName = obj.CustomerName;
       this.dialog = true;
     },
     deleteItem(item) {
@@ -454,12 +456,20 @@ export default {
     dialogOpen() {
       if (this.editedItem.SaleQuotationId == undefined) {
         //When click add
-        this.editedItem.Active = true;
+        this.listOfRecordDetails = [];
+        this.autoCompelete = "";
+
+        this.ExpiryDate = new Date();
+        this.DateSale = new Date();
+        //this.editItem.DateSale = new Date();
         this.clear();
       } else {
         //Edite Record
         //this.changeSaleQuotations(this.selectSaleQuotations);
       }
+    },
+    clear() {
+      this.editedItem = {};
     },
     close() {
       if (!this.dialog) {
@@ -475,6 +485,55 @@ export default {
 };
 </script>
 <style scoped>
+select {
+  -webkit-writing-mode: horizontal-tb !important;
+  text-rendering: auto;
+  color: -internal-light-dark-color(black, white);
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  -webkit-appearance: menulist;
+  box-sizing: border-box;
+  align-items: center;
+  white-space: pre;
+  -webkit-rtl-ordering: logical;
+  background-color: -internal-light-dark-color(white, black);
+  cursor: default;
+  margin: 0em;
+  font: 400 13.3333px Arial;
+  border-radius: 0px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(169, 169, 169);
+  border-image: initial;
+}
+input {
+  -webkit-writing-mode: horizontal-tb !important;
+  text-rendering: auto;
+  color: -internal-light-dark-color(black, white);
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  -webkit-appearance: textfield;
+  background-color: -internal-light-dark-color(white, black);
+  -webkit-rtl-ordering: logical;
+  cursor: text;
+  margin: 0em;
+  font: 400 13.3333px Arial;
+  padding: 1px 0px;
+  border-width: 2px;
+  border-style: inset;
+  border-color: initial;
+  border-image: initial;
+}
 .txtRequired {
   border: 1px solid red;
   border-radius: 4px;
