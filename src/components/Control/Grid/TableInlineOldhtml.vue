@@ -1,18 +1,6 @@
 <template>
   <div>
-    <table class="v-table table-bordered align-top-table td">
-      <colgroup>
-        <!---->
-        <col width="5%" class="ng-star-inserted" />
-        <col width="29%" />
-        <col width="14%" />
-        <col width="14%" />
-        <col width="14%" />
-        <!---->
-        <!---->
-        <col width="14%" />
-        <col width="10%" />
-      </colgroup>
+    <table class="v-table table-bordered">
       <thead>
         <th class="text-xs-left caption">ProductId</th>
         <th class="text-xs-left caption">Quantiy</th>
@@ -53,7 +41,6 @@
               <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
             </select>
             <br />
-            <!-- <v-text-field v-model="Description" label="Description" outline clearable></v-text-field> -->
             <input v-model="Description" />
           </td>
           <td>
@@ -321,30 +308,8 @@ export default {
 .table-bordered th {
   border: 1px solid #dee2e6;
 }
-.table {
-  width: 100%;
-  max-width: 100%;
-  margin-bottom: 1rem;
-  background-color: transparent;
-}
-table {
-  border-collapse: collapse;
-}
-.table td,
-.table th {
-  padding: 0.75rem 0.45rem !important;
-}
-.align-top-table td,
-.align-top-table th {
-  vertical-align: top !important;
-}
-/* .table-bordered,
-.table-bordered td,
-.table-bordered th {
-  border: 1px solid #dee2e6;
-} */
 /* Table Self Style*/
-/* table.v-table tbody td:first-child,
+table.v-table tbody td:first-child,
 table.v-table tbody td:not(:first-child),
 table.v-table tbody th:first-child,
 table.v-table tbody th:not(:first-child),
@@ -359,7 +324,7 @@ table.v-table thead th:not(:first-child) {
   text-overflow: ellipsis;
   white-space: nowrap;
   height: 30px;
-} */
+}
 .txtRequired {
   border: 1px solid red;
   border-radius: 4px;
@@ -401,8 +366,9 @@ select {
   height: 20px;
 }
 
+
 input {
-  padding: 0.75rem;
+  padding: 0.75rem ;
   color: #2a2a2a;
   background-color: #fff;
   border: 2px solid #dadfe6;
@@ -410,7 +376,7 @@ input {
   border-radius: 0.375rem;
   height: 20px;
 }
-/* -webkit-writing-mode: horizontal-tb !important;
+  /* -webkit-writing-mode: horizontal-tb !important;
   text-rendering: auto;
   color: -internal-light-dark-color(black, white);
   letter-spacing: normal;
