@@ -1,7 +1,6 @@
 <template>
-  <div style="padding-left: 5px;padding-right: 5px">
-    <!-- <table class="table-bordered align-top-table td"> -->
-    <table id="customers">
+  <div>
+    <table class="v-table table-bordered align-top-table td">
       <colgroup>
         <!---->
         <col width="5%" class="ng-star-inserted" />
@@ -45,8 +44,7 @@
         </tr>
         <!-- ------------------Break-------------------- -->
         <tr>
-          <!-- <div> -->
-          <td >
+          <td>
             <select
               v-model="selectProduct"
               v-bind:class="[validation.requiredProduct ? '': 'txtRequired' ]"
@@ -56,21 +54,29 @@
             </select>
             <br />
             <!-- <v-text-field v-model="Description" label="Description" outline clearable></v-text-field> -->
-            <div style="padding-top: 5px">
-            <input v-model="Description"  />
-            </div>
+            <input v-model="Description" />
           </td>
-          <td >
-            <input
+          <td>
+            <v-text-field
+              label="Quantity"
+              placeholder="Placeholder"
               type="number"
               min="0"
               maxlength="12"
               v-model="Quantity"
               @change="calculateLineTotal(tableRow)"
               v-bind:class="[this.validation.requiredQuantity ?  '': 'txtRequired' ]"
-            />
+            ></v-text-field>
+            <!-- <input
+              type="number"
+              min="0"
+              maxlength="12"
+              v-model="Quantity"
+              @change="calculateLineTotal(tableRow)"
+              v-bind:class="[this.validation.requiredQuantity ?  '': 'txtRequired' ]"
+            />-->
           </td>
-          <td >
+          <td>
             <input
               type="number"
               min="0"
@@ -80,7 +86,7 @@
               v-bind:class="[this.validation.requiredPrice ?  '': 'txtRequired' ]"
             />
           </td>
-          <td >
+          <td>
             <input
               type="text"
               maxlength="12"
@@ -90,10 +96,10 @@
               @keypress="preventNumericInput($event)"
             />
           </td>
-          <td >
+          <td>
             <input readonly type="number" min="0" step=".01" v-model="Amount" />
           </td>
-          <td >
+          <td>
             <v-icon
               style="font-size:18px"
               onmouseover="this.style.color='green'"
@@ -102,7 +108,6 @@
               v-on:click="emitToParent"
             >edit</v-icon>
           </td>
-          <!-- </div> -->
         </tr>
       </tbody>
     </table>
@@ -321,44 +326,11 @@ export default {
 };
 </script>
 <style scoped>
-#customers {
-  /* font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; */
-  border-collapse: collapse;
-  width: 100%;
-}
-
-#customers td,
-#customers th {
-  border: 1px solid #ddd;
-  padding: 3px;
-}
-
-#customers tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* #customers tr {
-  padding-top: 10px;
-  padding-bottom: 10px;
-} */
-/* 
-#customers tr:hover {
-  background-color: #ddd;
-} */
-
-#customers th {
-  /* padding-top: 10px;
-  padding-bottom: 10px; */
-  text-align: left;
-  background-color: white;
-  color: black;
-}
-/* .table-bordered,
+.table-bordered,
 .table-bordered td,
 .table-bordered th {
   border: 1px solid #dee2e6;
 }
-
 .table {
   width: 100%;
   max-width: 100%;
@@ -375,15 +347,59 @@ table {
 .align-top-table td,
 .align-top-table th {
   vertical-align: top !important;
+}
+/* .table-bordered,
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #dee2e6;
+} */
+/* Table Self Style*/
+/* table.v-table tbody td:first-child,
+table.v-table tbody td:not(:first-child),
+table.v-table tbody th:first-child,
+table.v-table tbody th:not(:first-child),
+table.v-table thead td:first-child,
+table.v-table thead td:not(:first-child),
+table.v-table thead th:first-child,
+table.v-table thead th:not(:first-child) {
+  padding: 0 10px;
+  width: inherit;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 30px;
 } */
 .txtRequired {
   border: 1px solid red;
   border-radius: 4px;
 }
 select {
+  /* padding: 0.375rem 0.75rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  height: 20px; */
+}
+select {
   -webkit-writing-mode: horizontal-tb !important;
+  /* text-rendering: auto;
+  color: -internal-light-dark-color(black, white);
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start; */
   -webkit-appearance: menulist;
+  /* box-sizing: border-box;
+  align-items: center;
+  white-space: pre; */
   -webkit-rtl-ordering: logical;
+  /* background-color: -internal-light-dark-color(white, black); */
   cursor: default;
   margin: 0em;
   font: 400 13.3333px Arial;
@@ -392,7 +408,7 @@ select {
   border-style: solid;
   border-color: rgb(169, 169, 169);
   border-image: initial;
-  height: 25px;
+  height: 20px;
 }
 
 input {
@@ -404,4 +420,40 @@ input {
   border-radius: 0.375rem;
   height: 20px;
 }
+/* -webkit-writing-mode: horizontal-tb !important;
+  text-rendering: auto;
+  color: -internal-light-dark-color(black, white);
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  -webkit-appearance: textfield;
+  background-color: -internal-light-dark-color(white, black);
+  -webkit-rtl-ordering: logical;
+  cursor: text;
+  margin: 0em;
+  font: 400 13.3333px Arial;
+  padding: 1px 0px;
+  border-radius: 4px;
+
+  border-width: 2px;
+  border-style: inset;
+  border-color: initial;
+  border-image: initial; */
+/* input,
+select {
+  border: 1px solid gray;
+  border-radius: 4px;
+  width: 100%;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+} */
+
+/* select.selector {
+  width: 100px;
+  border-style: solid;
+} */
 </style>

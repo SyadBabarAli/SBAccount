@@ -53,7 +53,7 @@
                         <v-divider></v-divider>
                         <v-layout>
                           <v-flex lg2 class="pa-1">
-                            <!-- Customer Name -->
+                            Customer Name
                             <auto-complete
                               :Name="this.editedItem.CustomerName"
                               :isAsync="true"
@@ -63,45 +63,55 @@
                             <input readonly v-model="editedItem.CustomerId" style="display:none;" />
                           </v-flex>
                           <v-flex class="pa-1">
-                            <v-text-field
-                              v-model="editedItem.Number"
-                              :append-icon="'autorenew'"
-                              placeholder="Placeholder"
-                              clearable
-                              label="Number"
-                              type="text"
-                              @click:append="getProposedNumber"
-                            ></v-text-field>
+                            <!-- Number
+                            <br /> -->
+                            <!-- <input v-model="editedItem.Number" /> -->
+                            <v-text-field label="Number" placeholder="Placeholder" v-model="editedItem.Number" ></v-text-field>
                           </v-flex>
                           <v-flex class="pa-1">
-                            <v-text-field
-                              label="Date"
-                              placeholder="Placeholder"
+                            <!-- Date Sale
+                            <br /> -->
+                            <!-- {{this.editItem.DateSale}}
+                          
+                            />
+                            New-->
+                            <!-- <input
+                              type="date"
+                              :value="editedItem.DateSale && editedItem.DateSale.toISOString().split('T')[0]"
+                              v-on:input="editedItem.DateSale = $event.target.valueAsDate"
+                            />-->
+                            <v-text-field label="Number" placeholder="Placeholder" v-model="editedItem.Number" ></v-text-field>
+                            <!-- <input
                               type="date"
                               :value="DateSale && DateSale.toISOString().split('T')[0]"
                               v-on:input="DateSale = $event.target.valueAsDate"
-                            ></v-text-field>
+                            /> -->
+                            <!-- <v-btn
+                              small
+                              color="colorLight"
+                              class="colorDark white--text font-weight-light"
+                              @click="setMyDateToToday"
+                            />-->
                           </v-flex>
                           <v-flex class="pa-1">
-                            <v-text-field
-                              label="Expiry Date"
-                              placeholder="Placeholder"
+                            <!-- <v-btn flat color="silver" @click="setDate">Set Date</v-btn> -->
+                            Expiry Date
+                            <br />
+                            <input
                               type="date"
                               :value="ExpiryDate && ExpiryDate.toISOString().split('T')[0]"
                               v-on:input="ExpiryDate = $event.target.valueAsDate"
-                            ></v-text-field>
+                            />
                           </v-flex>
                           <v-flex class="pa-1">
-                            <v-text-field
-                              label="Reference"
-                              placeholder="Placeholder"
-                              v-model="editedItem.Reference"
-                            ></v-text-field>
+                            Reference
+                            <br />
+                            <input v-model="editedItem.Reference" />
                           </v-flex>
-                          <v-flex class="pa-1" >
+                          <v-flex class="pa-1">
                             Branch
                             <br />
-                            <select v-model="selectBranch" style="width:100%">
+                            <select v-model="selectBranch">
                               <option
                                 v-for="option in itemsBranch"
                                 v-bind:value="option"
@@ -113,7 +123,7 @@
                           <v-flex lg2 class="pa-1">
                             Sales Person
                             <br />
-                            <select v-model="selectSalePerson" style="width:100%">
+                            <select v-model="selectSalePerson">
                               <option
                                 v-for="option in itemsSalePerson"
                                 v-bind:value="option"
@@ -123,7 +133,7 @@
                           <v-flex lg2 class="pa-1">
                             Currency
                             <br />
-                            <select v-model="selectCurrency" style="width:100%">
+                            <select v-model="selectCurrency">
                               <option
                                 v-for="option in itemsCurrency"
                                 v-bind:value="option"
@@ -455,54 +465,29 @@ export default {
         this.DateSale = new Date();
         //this.editItem.DateSale = new Date();
         this.clear();
-        this.getProposedNumber();
       } else {
         //Edite Record
         //this.changeSaleQuotations(this.selectSaleQuotations);
       }
     },
     clear() {
-      this.editedItem.CustomerName = "";
-      this.editedItem.Number = "";
-      this.editedItem.Reference = "";
+      this.editedItem = {};
     },
     close() {
       if (!this.dialog) {
         this.clear();
       }
       this.dialog = false;
-      // setTimeout(() => {
-      //   this.editedItem = Object.assign({}, this.defaultItem);
-      //   this.editedIndex = -1;
-      // }, 300);
-    },
-    async getProposedNumber() {
-      const res = await axios
-        .get(this.$urlApplication + "SaleQuotation/GetProposedNumber")
-        .then(res => {
-          this.editedItem.Number = res.data;
-        })
-        .catch(error => {});
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
     }
   }
 };
 </script>
 <style scoped>
 select {
-  -webkit-writing-mode: horizontal-tb !important;
-  -webkit-appearance: menulist;
-  -webkit-rtl-ordering: logical;
-  cursor: default;
-  margin: 0em;
-  font: 400 13.3333px Arial;
-  border-radius: 4px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(169, 169, 169);
-  border-image: initial;
-  height: 25px;
-}
-/* select {
   -webkit-writing-mode: horizontal-tb !important;
   text-rendering: auto;
   color: -internal-light-dark-color(black, white);
@@ -527,7 +512,7 @@ select {
   border-style: solid;
   border-color: rgb(169, 169, 169);
   border-image: initial;
-} */
+}
 input {
   -webkit-writing-mode: horizontal-tb !important;
   text-rendering: auto;

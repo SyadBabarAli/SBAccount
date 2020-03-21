@@ -1,6 +1,16 @@
 <template>
   <div class="autocomplete" style="width:100%">
-    <input
+    <v-text-field
+      label="Customer"
+      placeholder="Placeholder"
+      type="text"
+      @input="onChange"
+      v-model="search"
+      @keyup.down="onArrowDown"
+      @keyup.up="onArrowUp"
+      @keyup.enter="onEnter"
+    ></v-text-field>
+    <!-- <input
       type="text"
       class="inputClass"
       @input="onChange"
@@ -8,7 +18,7 @@
       @keyup.down="onArrowDown"
       @keyup.up="onArrowUp"
       @keyup.enter="onEnter"
-    />
+    />-->
     <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>
     <ul v-show="isOpen" class="autocomplete-results">
       <li v-if="isLoading" class="loading">Loading results...</li>
@@ -177,6 +187,11 @@ export default {
   position: absolute;
   background-color: white;
   z-index: 1;
+
+  margin-top: -18px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
 }
 
 .autocomplete-result {
