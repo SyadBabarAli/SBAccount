@@ -44,16 +44,15 @@
                     </v-toolbar-items>
                   </v-toolbar>
                   <v-card-text>
-                    <v-container grid-list-md>
+                    <v-container>
                       <v-card class="elevation-10">
                         <v-card-title
                           class="headline grey lighten-3 pa-1 ma-0"
                           primary-title
-                        >Sale Quotation - {{this.editedItem.StatusName}} - {{this.editedItem.StatusName}}</v-card-title>
+                        >Sale Quotation - {{this.editedItem.SaleQuotationId}} - {{this.editedItem.StatusName}}</v-card-title>
                         <v-divider></v-divider>
                         <v-layout>
                           <v-flex lg2 class="pa-1">
-                            <!-- Customer Name -->
                             <auto-complete
                               :Name="this.editedItem.CustomerName"
                               :isAsync="true"
@@ -77,18 +76,19 @@
                             <v-text-field
                               label="Date"
                               placeholder="Placeholder"
+                              :append-icon="'today'"
                               type="date"
                               :value="DateSale && DateSale.toISOString().split('T')[0]"
-                              v-on:input="DateSale = $event.target.valueAsDate"
                             ></v-text-field>
                           </v-flex>
                           <v-flex class="pa-1">
                             <v-text-field
                               label="Expiry Date"
                               placeholder="Placeholder"
+                              :append-icon="'today'"
                               type="date"
+                              @click:append="''"
                               :value="ExpiryDate && ExpiryDate.toISOString().split('T')[0]"
-                              v-on:input="ExpiryDate = $event.target.valueAsDate"
                             ></v-text-field>
                           </v-flex>
                           <v-flex class="pa-1">
@@ -98,7 +98,7 @@
                               v-model="editedItem.Reference"
                             ></v-text-field>
                           </v-flex>
-                          <v-flex class="pa-1" >
+                          <v-flex class="pa-1">
                             Branch
                             <br />
                             <select v-model="selectBranch" style="width:100%">
@@ -140,6 +140,59 @@
                             />
                           </v-flex>
                         </v-layout>
+
+                        <v-layout class="pa-1">
+                          <v-flex lg4>
+                            <v-textarea
+                              name="input-7-1"
+                              label="Term"
+                              v-model="editedItem.Term"
+                              hint="Hint text"
+                            ></v-textarea>
+                          </v-flex>
+                          <v-flex lg4></v-flex>
+                          <v-flex lg4>
+                            <v-layout>
+                              <v-flex lg6 class="font-weight-regular">Gross</v-flex>
+                              <v-flex lg6>
+                                <input type="text" v-model="GrossAmount" class="txtRight" />
+                              </v-flex>
+                            </v-layout>
+                            <v-layout>
+                              <v-flex lg4 class="font-weight-regular">Discount</v-flex>
+                              <v-flex lg4>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step=".01"
+                                  v-model="DiscountPercent"
+                                  v-on:change="calcDiscount(DiscountPercent)"
+                                  class="txtRight"
+                                />
+                              </v-flex>
+                              <v-flex lg4>
+                                <input
+                                  type="text"
+                                  class="txtRight"
+                                  v-model="DiscountAmount"
+                                  v-on:change="calcDiscountAmount(DiscountAmount)"
+                                />
+                              </v-flex>
+                            </v-layout>
+                            <v-layout>
+                              <v-flex lg6 class="font-weight-regular">TaxAmount</v-flex>
+                              <v-flex lg6>
+                                <input type="text" class="txtRight" />
+                              </v-flex>
+                            </v-layout>
+                            <v-layout>
+                              <v-flex lg6 class="font-weight-medium">Net (Rs)</v-flex>
+                              <v-flex lg6>
+                                <input type="text" class="txtRight" v-model="NetAmount" />
+                              </v-flex>
+                            </v-layout>
+                          </v-flex>
+                        </v-layout>
                       </v-card>
                     </v-container>
                   </v-card-text>
@@ -155,11 +208,11 @@
             >
               <template slot="items" slot-scope="props">
                 <td class="text-xs-left">{{ props.item.Number }}</td>
-                <td class="text-xs-left">{{ props.item.DateSale }}</td>
+                <td class="text-xs-left">{{ props.item.DateSale | momentConvertDate }}</td>
                 <td class="text-xs-left">{{ props.item.CustomerName }}</td>
                 <td class="text-xs-left">{{ props.item.BranchName }}</td>
                 <td class="text-xs-left">{{ props.item.SalePersonName }}</td>
-                <td class="text-xs-left">{{ props.item.ExpiryDate }}</td>
+                <td class="text-xs-left">{{ props.item.ExpiryDate | momentConvertDate }}</td>
                 <td class="text-xs-left">{{ props.item.GrossAmount }}</td>
                 <td class="text-xs-left">{{ props.item.NetAmount }}</td>
                 <td class="text-xs-left">{{ props.item.StatusName }}</td>
@@ -194,7 +247,6 @@ import axios from "axios";
 import { mixins } from "../../../../mixins/CustomMixins";
 import ButtonSmall from "../../../../components/control/ButtonSmall";
 import TableInline from "../../../../components/control/Grid/TableInline";
-//import DatePicker from "../../../../components/control/DatePickerFrom";
 import AutoComplete from "../../../../components/control/AutoCompelete/AutoCompelete";
 import DatePicker from "../../../../components/control/DatePicker/DatePicker";
 import moment from "moment";
@@ -211,17 +263,18 @@ export default {
     return {
       DateSale: new Date(),
       ExpiryDate: new Date(),
-      // data: {
-      //   message: "Hello Vue.js!",
-      //   DateSale: new Date("2011-04-11T10:20:30Z")
-      // },
+      GrossAmount: 0,
+      DiscountPercent: 0,
+      DiscountAmount: 0,
+      NetAmount: 0,
+      TaxAmount: 0,
       editedItem: {
         DateSale: new Date(),
         ExpiryDate: new Date(),
-        Number: "SQ-101",
-        Reference: "First customer",
-        autoCompelete: "",
-
+        Number: "",
+        Reference: "",
+        AutoCompelete: "",
+        Term: "",
         saleQuotationDetail: [],
         tableDetail: []
       },
@@ -238,14 +291,14 @@ export default {
       search: "",
       headers: [
         { text: "Number", value: "Number" },
-        { text: "DateSale", value: "DateSale" },
-        { text: "CustomerName", value: "CustomerName" },
-        { text: "BranchName", value: "BranchName" },
-        { text: "SalePersonName", value: "SalePersonName" },
-        { text: "ExpiryDate", value: "ExpiryDate" },
-        { text: "GrossAmount", value: "GrossAmount" },
-        { text: "NetAmount", value: "NetAmount" },
-        { text: "StatusName", value: "StatusName" },
+        { text: "Date", value: "DateSale" },
+        { text: "Customer", value: "CustomerName" },
+        { text: "Branch", value: "BranchName" },
+        { text: "Sales Man", value: "SalePersonName" },
+        { text: "Expiry Date", value: "ExpiryDate" },
+        { text: "Gross Amount", value: "GrossAmount" },
+        { text: "Net Amount", value: "NetAmount" },
+        { text: "Status ", value: "StatusName" },
         { text: "Action", value: "1" }
       ],
       isLoading: true,
@@ -253,8 +306,6 @@ export default {
       listOfRecords: [],
       listOfRecordDetails: [],
       editedIndex: -1
-      // editedItem: {},
-      // defaultItem: {}
     };
   },
   computed: {
@@ -280,13 +331,6 @@ export default {
     this.getSalePersons();
   },
   methods: {
-    // setMyDateToToday() {
-    //   //      this.DateSale = new Date();
-    //   this.DateSale = new Date("12/19/2012");
-    // },
-    // setDate() {
-    //   this.editItem.DateSale = new Date("2011-04-11T10:20:30Z");
-    // },
     async getSalePersons() {
       var result = await this.refillSelectOption(
         this.$urlApplication + "SaleQuotation/GetSalePersons"
@@ -320,13 +364,19 @@ export default {
 
     post() {
       var obj = this.editedItem;
-      obj.CustomerId = this.editedItem.autoCompelete.split("~")[1];
+      obj.CustomerId = this.editedItem.AutoCompelete.split("~")[1];
       obj.BranchId = this.selectBranch.value;
       obj.CurrencyId = this.selectCurrency.value;
       obj.SalePersonId = this.selectSalePerson.value;
       obj.CompanyId = 1;
       obj.DateSale = this.DateSale;
       obj.ExpiryDate = this.ExpiryDate;
+      obj.GrossAmount = this.GrossAmount;
+      obj.DiscountPercent = this.DiscountPercent;
+      obj.DiscountAmount = this.DiscountAmount;
+      obj.TaxAmount = this.TaxAmount;
+      obj.NetAmount = this.NetAmount;
+
       axios({
         method: "post",
         url: this.$urlApplication + "SaleQuotation/Post",
@@ -341,11 +391,15 @@ export default {
           this.IsSnackBar = false;
         });
     },
-    onChildClick(value) {
-      this.editedItem.saleQuotationDetail = value.tableRow;
+    onChildClick(obj) {
+      if (obj != null) {
+        this.editedItem.saleQuotationDetail = obj.tableRow;
+        this.GrossAmount = obj.subTotal;
+        this.NetAmount = obj.total;
+      }
     },
     onChildClickAutoCompelete(value) {
-      this.editedItem.autoCompelete = value;
+      this.editedItem.AutoCompelete = value;
       this.editedItem.CustomerId = value.split("~")[1];
     },
 
@@ -387,7 +441,12 @@ export default {
       obj.IsActive = true;
       obj.DateSale = this.DateSale;
       obj.ExpiryDate = this.ExpiryDate;
-      //obj.ProductId = this.editedItem.tableRow.Product.value;
+      obj.GrossAmount = this.GrossAmount;
+      obj.DiscountPercent = this.DiscountPercent;
+      obj.DiscountAmount = this.DiscountAmount;
+      obj.TaxAmount = this.TaxAmount;
+      obj.NetAmount = this.NetAmount;
+
       this.IsSnackBar = true;
 
       axios({
@@ -438,6 +497,13 @@ export default {
       this.editedItem.DateSale = obj.DateSale.split("T")[0];
       this.editedItem.ExpiryDate = obj.ExpiryDate.split("T")[0];
       this.editedItem.CustomerName = obj.CustomerName;
+      this.editedItem.Term = obj.Term;
+      this.GrossAmount = obj.GrossAmount;
+      this.DiscountPercent = obj.DiscountPercent;
+      this.DiscountAmount = obj.DiscountAmount;
+      this.TaxAmount = obj.TaxAmount;
+      this.NetAmount = obj.NetAmount;
+
       this.dialog = true;
     },
     deleteItem(item) {
@@ -446,14 +512,11 @@ export default {
         this.delete(item.SaleQuotationId);
     },
     dialogOpen() {
-      if (this.editedItem.SaleQuotationId == undefined) {
+      if (
+        this.editedItem.SaleQuotationId == undefined ||
+        this.editedItem.SaleQuotationId == ""
+      ) {
         //When click add
-        this.listOfRecordDetails = [];
-        this.autoCompelete = "";
-
-        this.ExpiryDate = new Date();
-        this.DateSale = new Date();
-        //this.editItem.DateSale = new Date();
         this.clear();
         this.getProposedNumber();
       } else {
@@ -462,9 +525,28 @@ export default {
       }
     },
     clear() {
+      this.editedIndex = -1;
+      this.listOfRecordDetails = [];
+      this.AutoCompelete = "";
+      this.ExpiryDate = new Date();
+      this.DateSale = new Date();
+
       this.editedItem.CustomerName = "";
       this.editedItem.Number = "";
       this.editedItem.Reference = "";
+      this.editedItem.SalePersonId = "";
+      this.editedItem.SettingStatusId = "";
+      this.editedItem.CompanyId = "";
+      this.editedItem.SaleQuotationId = "";
+      this.editedItem.Name = "";
+      this.editedItem.IsDeleted = false;
+      this.editedItem.IsActive = true;
+      this.editedItem.saleQuotationDetail = [];
+
+      this.GrossAmount = "";
+      this.DiscountPercent = "";
+      this.DiscountAmount = "";
+      this.NetAmount = "";
     },
     close() {
       if (!this.dialog) {
@@ -483,6 +565,25 @@ export default {
           this.editedItem.Number = res.data;
         })
         .catch(error => {});
+    },
+    calcDiscount() {
+      this.DiscountAmount = 0;
+      var value = this.GrossAmount;
+      var discount = this.DiscountPercent;
+      var result = null;
+      value = value - value * (parseFloat(discount) / 100);
+      if (!isNaN(value)) {
+        result = value.toFixed(2);
+      }
+      this.NetAmount = result;
+    },
+
+    calcDiscountAmount() {
+      this.DiscountPercent = 0;
+      var value = this.GrossAmount;
+      var discount = this.DiscountAmount;
+      var result = value - discount;
+      this.NetAmount = result;
     }
   }
 };
@@ -555,8 +656,39 @@ input {
   border: 1px solid red;
   border-radius: 4px;
 }
-input {
+/* input {
   border: 1px solid gray;
   border-radius: 4px;
+} */
+input {
+  padding: 0.75rem;
+  color: #2a2a2a;
+  background-color: #fff;
+  border: 2px solid #dadfe6;
+  font-family: Roboto;
+  border-radius: 0.375rem;
+  height: 20px;
+  width: 100%;
+}
+
+.txtRight {
+  text-align: right !important;
+}
+.txtLeft {
+  text-align: left !important;
+}
+.txtCenter {
+  text-align: center !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: rgba(0, 0, 0, 0);
+  opacity: 1;
+  display: block;
+  background: url(https://mywildalberta.ca/images/GFX-MWA-Parks-Reservations.png)
+    no-repeat;
+  width: 20px;
+  height: 20px;
+  border-width: thin;
 }
 </style>

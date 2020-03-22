@@ -1,26 +1,23 @@
 <template>
-  <div style="padding-left: 5px;padding-right: 5px">
+  <div>
     <!-- <table class="table-bordered align-top-table td"> -->
-    <table id="customers">
-      <colgroup>
-        <!---->
+    <table id="csmTable">
+      <!-- <colgroup>
         <col width="5%" class="ng-star-inserted" />
         <col width="29%" />
         <col width="14%" />
         <col width="14%" />
         <col width="14%" />
-        <!---->
-        <!---->
         <col width="14%" />
         <col width="10%" />
-      </colgroup>
+      </colgroup>-->
       <thead>
-        <th class="text-xs-left caption">ProductId</th>
-        <th class="text-xs-left caption">Quantiy</th>
-        <th class="text-xs-left caption">Price</th>
-        <th class="text-xs-left caption">Discount</th>
-        <th class="text-xs-left caption">Amount</th>
-        <th class="text-xs-left caption">Action</th>
+        <th class="txtLeft">Product</th>
+        <th class="txtRight">Quantity</th>
+        <th class="txtRight">Price</th>
+        <th class="txtRight">Discount</th>
+        <th class="txtRight">Amount</th>
+        <th class="txtCenter">Action</th>
       </thead>
       <tbody>
         <tr v-for="(items, index) in tableRow" :key="index">
@@ -29,11 +26,11 @@
             <br />
             {{items.Description}}
           </td>
-          <td>{{items.Quantity}}</td>
-          <td>{{items.Price}}</td>
-          <td>{{items.Discount}}</td>
-          <td>{{items.Amount}}</td>
-          <td>
+          <td class="txtRight">{{items.Quantity}}</td>
+          <td class="txtRight">{{items.Price}}</td>
+          <td class="txtRight">{{items.Discount}}</td>
+          <td class="txtRight">{{items.Amount}}</td>
+          <td class="txtCenter">
             <v-icon
               style="font-size:18px"
               onmouseover="this.style.color='red'"
@@ -46,31 +43,31 @@
         <!-- ------------------Break-------------------- -->
         <tr>
           <!-- <div> -->
-          <td >
+          <td>
             <select
               v-model="selectProduct"
               v-bind:class="[validation.requiredProduct ? '': 'txtRequired' ]"
-              style="width:100px"
             >
               <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
             </select>
             <br />
             <!-- <v-text-field v-model="Description" label="Description" outline clearable></v-text-field> -->
             <div style="padding-top: 5px">
-            <input v-model="Description"  />
+              <input v-model="Description" />
             </div>
           </td>
-          <td >
+          <td>
             <input
               type="number"
               min="0"
               maxlength="12"
               v-model="Quantity"
-              @change="calculateLineTotal(tableRow)"
-              v-bind:class="[this.validation.requiredQuantity ?  '': 'txtRequired' ]"
+              v-on:change="calculateLineTotal(tableRow);"
+              v-bind:class="[this.validation.requiredQuantity ? '': 'txtRequired' ]"
+              class="txtRight"
             />
           </td>
-          <td >
+          <td>
             <input
               type="number"
               min="0"
@@ -78,9 +75,10 @@
               v-model="Price"
               @change="calculateLineTotal(tableRow)"
               v-bind:class="[this.validation.requiredPrice ?  '': 'txtRequired' ]"
+              class="txtRight"
             />
           </td>
-          <td >
+          <td>
             <input
               type="text"
               maxlength="12"
@@ -88,12 +86,13 @@
               v-model="Discount"
               @change="calculateLineTotal(tableRow)"
               @keypress="preventNumericInput($event)"
+              class="txtRight"
             />
           </td>
-          <td >
-            <input readonly type="number" min="0" step=".01" v-model="Amount" />
+          <td>
+            <input readonly type="number" min="0" step=".01" v-model="Amount" class="txtRight" />
           </td>
-          <td >
+          <td class="txtCenter">
             <v-icon
               style="font-size:18px"
               onmouseover="this.style.color='green'"
@@ -196,6 +195,7 @@ export default {
         }
         this.calculateTotal();
       }
+      //this.emitToParent(obj);
     },
     deleteRow(index, items) {
       var idx = this.tableRow.indexOf(items);
@@ -321,32 +321,32 @@ export default {
 };
 </script>
 <style scoped>
-#customers {
+#csmTable {
   /* font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; */
   border-collapse: collapse;
   width: 100%;
 }
 
-#customers td,
-#customers th {
+#csmTable td,
+#csmTable th {
   border: 1px solid #ddd;
   padding: 3px;
 }
 
-#customers tr:nth-child(even) {
+#csmTable tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-/* #customers tr {
+/* #csmTable tr {
   padding-top: 10px;
   padding-bottom: 10px;
 } */
 /* 
-#customers tr:hover {
+#csmTable tr:hover {
   background-color: #ddd;
 } */
 
-#customers th {
+#csmTable th {
   /* padding-top: 10px;
   padding-bottom: 10px; */
   text-align: left;
@@ -393,8 +393,17 @@ select {
   border-color: rgb(169, 169, 169);
   border-image: initial;
   height: 25px;
+  width: 100%;
 }
-
+.txtRight {
+  text-align: right !important;
+}
+.txtLeft {
+  text-align: left !important;
+}
+.txtCenter {
+  text-align: center !important;
+}
 input {
   padding: 0.75rem;
   color: #2a2a2a;
@@ -403,5 +412,6 @@ input {
   font-family: Roboto;
   border-radius: 0.375rem;
   height: 20px;
+  width: 100%;
 }
 </style>
