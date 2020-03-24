@@ -247,6 +247,7 @@ import axios from "axios";
 import { mixins } from "../../../../mixins/CustomMixins";
 import ButtonSmall from "../../../../components/control/ButtonSmall";
 import TableInline from "../../../../components/control/Grid/TableInline";
+//import DatePicker from "../../../../components/control/DatePickerFrom";
 import AutoComplete from "../../../../components/control/AutoCompelete/AutoCompelete";
 import DatePicker from "../../../../components/control/DatePicker/DatePicker";
 import moment from "moment";
@@ -441,6 +442,7 @@ export default {
       obj.IsActive = true;
       obj.DateSale = this.DateSale;
       obj.ExpiryDate = this.ExpiryDate;
+
       obj.GrossAmount = this.GrossAmount;
       obj.DiscountPercent = this.DiscountPercent;
       obj.DiscountAmount = this.DiscountAmount;
