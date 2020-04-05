@@ -33,42 +33,20 @@
                       <th v-on:click="sortTable('GrossAmount')">Gross Amount</th>
                       <th v-on:click="sortTable('NetAmount')">Net Amount</th>
                       <th v-on:click="sortTable('StatusName')">Status</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="row in rows">
-                      <td class="text-xs-left">{{row.Number}}</td>
-                      <td class="text-xs-left">{{row.InvoiceDate | momentConvertDate }}</td>
-                      <td class="text-xs-left">{{row.CustomerName}}</td>
-                      <td class="text-xs-left">{{row.Reference}}</td>
-                      <td class="text-xs-left">{{row.BranchName}}</td>
-                      <td class="text-xs-left">{{row.SalePersonName}}</td>
-                      <td class="text-xs-left">{{row.InvoiceDueDate | momentConvertDate}}</td>
-                      <td class="text-xs-right">{{row.GrossAmount}}</td>
-                      <td class="text-xs-right">{{row.NetAmount}}</td>
-                      <td class="text-xs-left">{{row.StatusName}}</td>
-                      <td class="justify-center layout px-0">
-                        <v-btn
-                          color="primary"
-                          fab
-                          small
-                          dark
-                          style="height:22px;width:22px;font-size:13px;"
-                          :to="'/InvoiceEdit?id=' +row.SaleInvoiceId"
-                        >
-                          <v-icon style="font-size:13px">edit</v-icon>
-                        </v-btn>
-                        <v-btn
-                          color="red"
-                          fab
-                          small
-                          dark
-                          style="height:22px;width:22px;font-size:13px;"
-                        >
-                          <v-icon style="font-size:13px" @click="deleteItem(row)">delete</v-icon>
-                        </v-btn>
-                      </td>
+                      <td>{{row.Number}}</td>
+                      <td>{{row.InvoiceDate | momentConvertDate }}</td>
+                      <td>{{row.CustomerName}}</td>
+                      <td>{{row.Reference}}</td>
+                      <td>{{row.BranchName}}</td>
+                      <td>{{row.SalePersonName}}</td>
+                      <td>{{row.InvoiceDueDate | momentConvertDate}}</td>
+                      <td>{{row.GrossAmount}}</td>
+                      <td>{{row.NetAmount}}</td>
+                      <td>{{row.StatusName}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -84,10 +62,46 @@
                   v-model="currentPage"
                   :total-visible="3"
                   :length="totalPages"
-                  @input="changePage(currentPage)"
+                  @input="change_page(currentPage)"
                 ></v-pagination>
               </v-flex>
             </v-layout>
+
+            <!-- <v-data-table
+              :headers="headers"
+              :items="listOfRecords"
+              class="elevation-3"
+              :search="search"
+              :loading="isLoading"
+            >
+              <template slot="items" slot-scope="props">
+                <td class="text-xs-left">{{ props.item.Number }}</td>
+                <td class="text-xs-left">{{ props.item.InvoiceDate | momentConvertDate }}</td>
+                <td class="text-xs-left">{{ props.item.CustomerName }}</td>
+                <td class="text-xs-left">{{ props.item.Reference }}</td>
+                <td class="text-xs-left">{{ props.item.BranchName }}</td>
+                <td class="text-xs-left">{{ props.item.SalePersonName }}</td>
+                <td class="text-xs-left">{{ props.item.InvoiceDueDate | momentConvertDate }}</td>
+                <td class="text-xs-left">{{ props.item.GrossAmount }}</td>
+                <td class="text-xs-left">{{ props.item.NetAmount }}</td>
+                <td class="text-xs-left">{{ props.item.StatusName }}</td>
+                <td class="justify-center layout px-0">
+                  <v-btn
+                    color="primary"
+                    fab
+                    small
+                    dark
+                    style="height:22px;width:22px;font-size:13px;"
+                    :to="'/InvoiceEdit?id=' +props.item.SaleInvoiceId"
+                  >
+                    <v-icon style="font-size:13px">edit</v-icon>
+                  </v-btn>
+                  <v-btn color="red" fab small dark style="height:22px;width:22px;font-size:13px;">
+                    <v-icon style="font-size:13px" @click="deleteItem(props.item)">delete</v-icon>
+                  </v-btn>
+                </td>
+              </template>
+            </v-data-table>-->
           </v-flex>
         </v-layout>
       </v-card>
@@ -115,11 +129,28 @@ export default {
       rows: [],
       searchable: "Number",
       search: "",
-      selectTableRowNo: 5,
+      selectTableRowNo: 1,
       itemsTableRowNo: [1, 2, 3, 4, 5],
       totalPages: 1,
+
+      headers: [
+        { text: "Number", value: "Number" },
+        { text: "Date", value: "InvoiceDate" },
+        { text: "Customer", value: "CustomerName" },
+        { text: "Reference", value: "Reference" },
+        { text: "Branch", value: "BranchName" },
+        { text: "Sales Man", value: "SalePersonName" },
+        { text: "Expiry InvoiceDate", value: "InvoiceDueDate" },
+        { text: "Gross Amount", value: "GrossAmount" },
+        { text: "Net Amount", value: "NetAmount" },
+        { text: "Status ", value: "StatusName" },
+        { text: "Action", value: "1" }
+      ],
       isLoading: true,
-      IsSnackBar: false
+      IsSnackBar: false,
+      listOfRecords: [],
+      listOfRecordDetails: [],
+      editedIndex: -1
     };
   },
   watch: {
@@ -144,10 +175,12 @@ export default {
       this.asc = this.ascending;
       this.tableLoad();
     },
-    changePage: function changePage(page) {
+
+    change_page: function change_page(page) {
       this.currentPage = page;
       this.tableLoad();
     },
+
     async tableLoad() {
       this.isLoading = true;
       var pagedResult = {
@@ -158,6 +191,7 @@ export default {
         Searchable: this.searchable,
         Search: this.search
       };
+
       axios({
         method: "put",
         url: this.$urlApplication + "SaleInvoice/GetSaleInvoice",
@@ -173,6 +207,19 @@ export default {
           this.isLoading = false;
         });
     },
+    // async tableLoad() {
+    //   this.isLoading = true;
+    //   const res = await axios
+    //     .get(this.$urlApplication + "SaleInvoice")
+    //     .then(res => {
+    //       this.listOfRecords = res.data;
+    //       this.isLoading = false;
+    //     })
+    //     .catch(error => {
+    //       this.isLoading = false;
+    //     });
+    // },
+
     delete(id) {
       var pId = id;
       this.IsSnackBar = true;
@@ -188,6 +235,7 @@ export default {
           this.IsSnackBar = false;
         });
     },
+
     deleteItem(item) {
       confirm("Are you sure you want to delete this item?") &&
         this.delete(item.SaleInvoiceId);

@@ -99,9 +99,128 @@
           </template>
 
           <v-card>
-            <v-container>
-              <v-layout align-center>
+            <!-- <v-container>
+              <v-layout>
+                <v-flex lg3>
+                  <v-layout row wrap>
+                    <h4>
+                      <v-flex lg12>Lists</v-flex>
+                    </h4>
+                    <v-flex lg12>
+                      <a href="#/Customer">Customer</a>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Vendors</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Products</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Employees</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>SalesPersons</button>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+                <v-flex lg2>
+                  <v-layout row wrap>
+                    <h4>
+                      <v-flex lg12>Categories</v-flex>
+                    </h4>
+                    <v-flex lg12>
+                      <button>Customer Categories</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Vendor Categories</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Product Categories</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Brands</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Departments</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Designation</button>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+                <v-flex lg2>
+                  <v-layout row wrap>
+                    <h4>
+                      <v-flex lg12>General</v-flex>
+                    </h4>
+                    <v-flex lg12>
+                      <button>Taxes</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Warehouses</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Adjustment Types</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Custom Fields</button>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+                <v-flex lg2>
+                  <v-layout row wrap>
+                    <h4>
+                      <v-flex lg12>Sales Geography</v-flex>
+                    </h4>
+                    <v-flex lg12>
+                      <button>Regions</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Zones</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Territories</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Areas</button>
+                    </v-flex>
+                    <v-flex lg12>
+                      <button>Sub Area</button>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+                <v-flex lg2>
+                  <v-layout row wrap>
+                    <h4>
+                      <v-flex lg12>Groups</v-flex>
+                    </h4>
+                    <v-flex lg12>
+                      <button>Branches</button>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-container> -->
+            <!-- <v-container fill-height fluid class="x-ctn">
+              <v-layout :align="alignment" :justify="justify" class="x-row grey lighten-5">
+                <v-select
+                  class="x-input-select"
+                  v-model="alignment"
+                  :items="alignmentsItems"
+                  label="Vertical align"
+                ></v-select>
+                <v-select
+                  class="x-input-select"
+                  v-model="justify"
+                  :items="justifyItems"
+                  label="Horizontal align"
+                ></v-select>
+              </v-layout>
+            </v-container>-->
+            <v-container fill-height fluid class="x-ctn">
+              <v-layout align="start" class="x-row grey lighten-5">
                 <v-flex xs12 sm4 text-xs-left>
+                  <div>List</div>
                   <div>
                     <v-btn depressed small to="/Customers">Customers</v-btn>
                   </div>
@@ -124,19 +243,19 @@
                     <v-btn depressed small to="/CategoryCustomer">Customer</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small  to="/CategoryVendor" >Vendor</v-btn>
+                    <v-btn depressed small to="/CategoryVendor">Vendor</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small  to="/CategoryProduct">Product</v-btn>
+                    <v-btn depressed small to="/CategoryProduct">Product</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small  to="/CategoryBrand">Brands</v-btn>
+                    <v-btn depressed small to="/CategoryBrand">Brands</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small  to="/CategoryDepartment">Departments</v-btn>
+                    <v-btn depressed small to="/CategoryDepartment">Departments</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small  to="/CategoryDesignation">Designations</v-btn>
+                    <v-btn depressed small to="/CategoryDesignation">Designations</v-btn>
                   </div>
                 </v-flex>
 
@@ -299,10 +418,14 @@ export default {
     MenuSubheaders,
     treeView,
     TreeViewSupportGroup,
-    TreeViewLocation,
-    
+    TreeViewLocation
   },
   data: () => ({
+    alignmentsItems: ["start", "center", "end", "baseline", "stretch"],
+    alignment: "center",
+    dense: false,
+    justifyItems: ["start", "center", "end", "space-around", "space-between"],
+    justify: "center",
     loginItems: [{ title: "Log Our" }],
     loginUserName: "",
     offsetTop: 0,
@@ -583,5 +706,24 @@ export default {
 .fade-enter,
 .fade-leave-active {
   opacity: 0;
+}
+
+ul.megamenu {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 578px;
+  top: -9999px;
+  background: #f5f5f5;
+  text-align: left;
+  border: 2px solid #40dc7e;
+  -webkit-box-shadow: 0 2px 12px 0 #dfe3eb;
+  box-shadow: 0 2px 12px 0 #dfe3eb;
+  z-index: 1;
+  left: 13%;
+  border-radius: 0.375rem;
 }
 </style>

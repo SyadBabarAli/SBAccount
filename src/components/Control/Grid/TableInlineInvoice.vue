@@ -1,18 +1,9 @@
 <template>
   <div>
-    <!-- <table class="table-bordered align-top-table td"> -->
     <table id="csmTable">
-      <!-- <colgroup>
-        <col width="5%" class="ng-star-inserted" />
-        <col width="29%" />
-        <col width="14%" />
-        <col width="14%" />
-        <col width="14%" />
-        <col width="14%" />
-        <col width="10%" />
-      </colgroup>-->
       <thead>
         <th class="txtLeft">Product</th>
+        <th class="txtLeft">Warehouse</th>
         <th class="txtRight">Quantity</th>
         <th class="txtRight">Price</th>
         <th class="txtRight">Discount</th>
@@ -26,10 +17,11 @@
             <br />
             {{items.Description}}
           </td>
+          <td>{{items.WarehouseName}}</td>
           <td class="txtRight">{{items.Quantity}}</td>
           <td class="txtRight">{{items.Price}}</td>
-          <td class="txtRight">{{items.Discount}}</td>
-          <td class="txtRight">{{items.Amount}}</td>
+          <td class="txtRight">{{items.DiscountAmount}}</td>
+          <td class="txtRight">{{items.NetAmount}}</td>
           <td class="txtCenter">
             <v-icon
               style="font-size:18px"
@@ -46,19 +38,19 @@
             <auto-complete
               :Name="ProductName"
               :isAsync="true"
-              :apiUrl="'SaleQuotation/GetProduct?pSearch='"
+              :apiUrl="'SaleInvoice/GetProduct?pSearch='"
               v-on:input="onChildClickAutoCompelete"
             />
-            <!-- <select
-              v-model="selectProduct"
-              v-bind:class="[validation.requiredProduct ? '': 'txtRequired' ]"
-            >
-              <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
-            </select>-->
-            <!-- <br /> -->
-            <!-- <div style="padding-top: 5px"> -->
             <input v-model="Description" />
-            <!-- </div> -->
+          </td>
+          <td>
+            <select
+              v-model="selectWarehouse"
+              v-bind:class="[validation.requiredWarehouse ? '': 'txtRequired' ]"
+              style="width:100px"
+            >
+              <option v-for="option in itemsWarehouse" v-bind:value="option">{{ option.Name }}</option>
+            </select>
           </td>
           <td>
             <input
@@ -87,14 +79,14 @@
               type="text"
               maxlength="12"
               min="0"
-              v-model="Discount"
+              v-model="DiscountAmount"
               @change="calculateLineTotal(tableRow)"
               @keypress="preventNumericInput($event)"
               class="txtRight"
             />
           </td>
           <td>
-            <input readonly type="number" min="0" step=".01" v-model="Amount" class="txtRight" />
+            <input readonly type="number" min="0" step=".01" v-model="NetAmount" class="txtRight" />
           </td>
           <td class="txtCenter">
             <v-icon
@@ -117,9 +109,12 @@ export default {
   components: {
     AutoComplete
   },
-  props: ["objData", "tableRows"],
+  props: ["objData", "objWarehouse", "tableRows"],
   data() {
     return {
+      selectWarehouse: null,
+      itemsWarehouse: null,
+
       AutoCompelete: "",
       ProductName: "",
       selectProduct: null,
@@ -127,13 +122,14 @@ export default {
       Description: "",
       Quantity: "",
       Price: "",
-      Discount: 0,
-      Amount: 0,
+      DiscountAmount: 0,
+      NetAmount: 0,
       validation: [
         { requiredName: false },
         { requiredQuantity: false },
         { requiredPrice: false },
-        { requiredProduct: false }
+        { requiredProduct: false },
+        { requiredWarehouse: false }
       ],
       table_subtotal: 0,
       table_total: 0,
@@ -144,6 +140,7 @@ export default {
   },
   mounted: function() {
     this.itemsProduct = this.objData;
+    this.itemsWarehouse = this.objWarehouse;
     this.tableRow = this.tableRows;
   },
   watch: {
@@ -153,10 +150,19 @@ export default {
     objData: function() {
       this.itemsProduct = this.objData;
     },
+    objWarehouse: function() {
+      this.itemsWarehouse = this.objWarehouse;
+    },
     selectProduct: function(val) {
       this.validation.requiredProduct = this.isRequiredField(
         val,
         this.validation.requiredProduct
+      );
+    },
+    selectWarehouse: function(val) {
+      this.validation.requiredWarehouse = this.isRequiredField(
+        val,
+        this.validation.requiredWarehouse
       );
     },
     Quantity: function(val) {
@@ -173,23 +179,26 @@ export default {
       );
       this.calculateLineTotal(this.tableRow);
     },
-    Discount: function(val) {
+    DiscountAmount: function(val) {
       this.calculateLineTotal(this.tableRow);
     }
   },
   methods: {
     onChildClickAutoCompelete(obj) {
       this.AutoCompelete = obj;
+
+      this.WarehouseId = obj.WarehouseId;
+
       this.ProductName = obj.text;
-      this.ProductId = obj.value; //obj.split("~")[1];
+      this.ProductId = obj.value;
       this.Price = obj.data.SalePrice;
-      this.Discount = 0;
+      this.DiscountAmount = 0;
       this.Quantity = 1;
     },
     calculateTotal() {
       var subtotal, total;
       subtotal = this.tableRow.reduce(function(sum, product) {
-        var lineTotal = parseFloat(product.Amount);
+        var lineTotal = parseFloat(product.NetAmount);
         if (!isNaN(lineTotal)) {
           return sum + lineTotal;
         }
@@ -208,13 +217,13 @@ export default {
       if (items != undefined) {
         var Price = items.Price;
         var Quantity = items.Quantity;
-        var Discount = items.Discount;
+        var DiscountAmount = items.DiscountAmount;
 
         var total = parseFloat(Price) * parseFloat(Quantity);
         // //Discount Calculation
-        total = total - total * (parseFloat(Discount) / 100);
+        total = total - total * (parseFloat(DiscountAmount) / 100);
         if (!isNaN(total)) {
-          items.Amount = total.toFixed(2);
+          items.NetAmount = total.toFixed(2);
         }
         this.calculateTotal();
       }
@@ -231,13 +240,21 @@ export default {
     },
     addNewRow() {
       var ProductId = 0;
+      var WarehouseId = this.selectWarehouse.WarehouseId;
+      var WarehouseName = this.selectWarehouse.Name;
+
       var ProductName = "";
       var Quantity = this.Quantity;
       var Price = this.Price;
-      var Discount = this.Discount;
-      var Amount = this.Amount;
+      var DiscountAmount = this.DiscountAmount;
+      var NetAmount = this.NetAmount;
       var Description = this.Description;
 
+      if (WarehouseId == undefined || WarehouseId.length == 0) {
+        this.validation.requiredWarehouse = false;
+      } else {
+        this.validation.requiredWarehouse = true;
+      }
       if (ProductId == undefined || ProductId.length == 0) {
         this.validation.requiredProduct = false;
       } else {
@@ -264,11 +281,13 @@ export default {
         this.tableRow.push({
           ProductId: ProductId,
           ProductName: ProductName,
+          WarehouseId: WarehouseId,
+          WarehouseName: WarehouseName,
           Description: Description,
           Price: this.Price,
           Quantity: this.Quantity,
-          Discount: this.Discount,
-          Amount: this.Amount
+          DiscountAmount: this.DiscountAmount,
+          NetAmount: this.NetAmount
         });
         this.calculateTotal();
         this.calculateLineTotal(this.tableRow);
@@ -279,12 +298,12 @@ export default {
           total: this.table_total
         };
 
-        this.Discount = "";
+        this.DiscountAmount = "";
         this.Name = "";
         this.Description = "";
         this.Price = "";
         this.Quantity = "";
-        this.Amount = "";
+        this.NetAmount = "";
         this.refreshData();
       }
     },

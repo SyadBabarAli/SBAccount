@@ -42,23 +42,19 @@
         </tr>
         <!-- ------------------Break-------------------- -->
         <tr>
+          <!-- <div> -->
           <td>
-            <auto-complete
-              :Name="ProductName"
-              :isAsync="true"
-              :apiUrl="'SaleQuotation/GetProduct?pSearch='"
-              v-on:input="onChildClickAutoCompelete"
-            />
-            <!-- <select
+            <select
               v-model="selectProduct"
               v-bind:class="[validation.requiredProduct ? '': 'txtRequired' ]"
             >
               <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
-            </select>-->
-            <!-- <br /> -->
-            <!-- <div style="padding-top: 5px"> -->
-            <input v-model="Description" />
-            <!-- </div> -->
+            </select>
+            <br />
+            <!-- <v-text-field v-model="Description" label="Description" outline clearable></v-text-field> -->
+            <div style="padding-top: 5px">
+              <input v-model="Description" />
+            </div>
           </td>
           <td>
             <input
@@ -105,23 +101,17 @@
               v-on:click="emitToParent"
             >edit</v-icon>
           </td>
+          <!-- </div> -->
         </tr>
       </tbody>
     </table>
   </div>
 </template>
 <script>
-import AutoComplete from "../../../components/control/AutoCompelete/AutoCompeleteHtml";
-
 export default {
-  components: {
-    AutoComplete
-  },
   props: ["objData", "tableRows"],
   data() {
     return {
-      AutoCompelete: "",
-      ProductName: "",
       selectProduct: null,
       itemsProduct: null,
       Description: "",
@@ -164,28 +154,15 @@ export default {
         val,
         this.validation.requiredQuantity
       );
-      this.calculateLineTotal(this.tableRow);
     },
     Price: function(val) {
       this.validation.requiredPrice = this.isRequiredField(
         val,
         this.validation.requiredPrice
       );
-      this.calculateLineTotal(this.tableRow);
-    },
-    Discount: function(val) {
-      this.calculateLineTotal(this.tableRow);
     }
   },
   methods: {
-    onChildClickAutoCompelete(obj) {
-      this.AutoCompelete = obj;
-      this.ProductName = obj.text;
-      this.ProductId = obj.value; //obj.split("~")[1];
-      this.Price = obj.data.SalePrice;
-      this.Discount = 0;
-      this.Quantity = 1;
-    },
     calculateTotal() {
       var subtotal, total;
       subtotal = this.tableRow.reduce(function(sum, product) {
@@ -259,8 +236,8 @@ export default {
         this.validation.requiredQuantity &&
         this.validation.requiredPrice
       ) {
-        ProductName = this.ProductName; // this.selectProduct.text;
-        ProductId = this.ProductId; //this.selectProduct.value;
+        ProductName = this.selectProduct.text;
+        ProductId = this.selectProduct.value;
         this.tableRow.push({
           ProductId: ProductId,
           ProductName: ProductName,

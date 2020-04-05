@@ -1,16 +1,17 @@
 <template>
   <div class="autocomplete" style="width:100%">
-    <v-text-field
+    <input
       label="Customer"
       placeholder="Placeholder"
+      class="inputClass"
       type="text"
+      v-on:blur="onBlur"
       @input="onChange"
       v-model="search"
-      v-on:blur="onBlur"
       @keyup.down="onArrowDown"
       @keyup.up="onArrowUp"
       @keyup.enter="onEnter"
-    ></v-text-field>
+    />
     <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>
     <ul v-show="isOpen" class="autocomplete-results">
       <li v-if="isLoading" class="loading">Loading results...</li>
@@ -75,10 +76,11 @@ export default {
               : (items.Text = undefined ? "Empty" : items.Text));
             var result = {
               value: items.Value,
-              text: text
+              text: text,
+              data: items
             };
-            this.results.push(result);
 
+            this.results.push(result);
             this.isLoading = false;
           }
         })
@@ -98,29 +100,25 @@ export default {
         // setTimeout(() => {
         //   this.message =
         this.fillData();
-
         //}, 1000);
       } else {
         // Let's search our flat array
         this.filterResults();
-
         this.isOpen = true;
       }
     },
 
     filterResults() {
       // first uncapitalize all the things
-      var resutl = "";
       this.results = this.items.filter(item => {
-        resutl = item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+        return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
       });
-      return resutl;
     },
     setResult(result) {
       this.search = result.text.trim();
       this.isOpen = false;
-      var result2 = this.search + "~" + result.value;
-      this.$emit("input", result2);
+      //var result2 = this.search + "~" + result.value;
+      this.$emit("input", result);
     },
     onArrowDown(evt) {
       if (this.arrowCounter < this.results.length) {
@@ -173,8 +171,8 @@ export default {
     document.removeEventListener("click", this.handleClickOutside);
   }
 };
-</script> 
-<style>
+</script>
+<style scoped>
 .autocomplete {
   position: relative;
   width: 130px;
@@ -191,7 +189,7 @@ export default {
   background-color: white;
   z-index: 1;
 
-  margin-top: -18px;
+  /* margin-top: -18px; */
   margin-right: 0px;
   margin-bottom: 0px;
   margin-left: 0px;
@@ -210,10 +208,29 @@ export default {
 }
 
 .inputClass {
-  border: 1px solid gray;
+  padding: 0.75rem;
+  color: #2a2a2a;
+  background-color: #fff;
+  border: 2px solid #dadfe6;
+  font-family: Roboto;
+  border-radius: 0.375rem;
+  height: 20px;
+  width: 100%;
+  /* border: 1px solid gray;
   border-radius: 4px;
   width: 100%;
   -moz-appearance: none;
-  -webkit-appearance: none;
+  -webkit-appearance: none; */
 }
+/* 
+input {
+  padding: 0.75rem;
+  color: #2a2a2a;
+  background-color: #fff;
+  border: 2px solid #dadfe6;
+  font-family: Roboto;
+  border-radius: 0.375rem;
+  height: 20px;
+  width: 100%;
+} */
 </style>

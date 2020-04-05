@@ -14,11 +14,51 @@ export const mixins = {
   },
 
   methods: {
+    refillSelect2(id, items, clmId) {
+      var pId = id,
+        pItems = items,
+        result = null;
 
+      for (var items of pItems) {
+        var value = items[clmId];
+
+        //Set Default-Start
+        if (pId == null || pId == undefined || pId == 0) {
+          result = items;
+          break;
+        }
+        //Set Default-End
+
+        if (pId == value) {
+          result = items;
+          break;
+        }
+      }
+      return result;
+    },
+    // refillSelect2(id, items, clmId, clmName) {
+    //   var pId = id,
+    //     pItems = items,
+    //     result = null;
+
+    //   for (var items of pItems) {
+    //     var value = items[clmId];
+    //     var text = items[clmName];
+    //     if (pId == value) {
+    //       result = {
+    //         value: value,
+    //         Name: text
+    //       };
+    //       break;
+    //     }
+    //   }
+    //   return result;
+    // },
     refillSelect(id, items) {
       var pId = id,
         pItems = items,
         result = null;
+      debugger
       for (var items of pItems) {
         if (pId == items.value) {
           result = {
