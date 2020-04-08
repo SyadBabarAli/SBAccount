@@ -4,7 +4,7 @@
       <v-card class="black--text elevation-5">
         <v-layout>
           <v-flex lg12>
-            <v-card-title class="headline grey lighten-3 pa-1 ma-0" primary-title>Receive Money</v-card-title>
+            <v-card-title class="headline grey lighten-3 pa-1 ma-0" primary-title>Sale Invoice</v-card-title>
             <v-card-title>
               <v-toolbar-title>Details</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
@@ -16,7 +16,7 @@
                 single-line
                 hide-details
               ></v-text-field>
-              <v-btn slot="activator" color="primary" dark class="mb-2" to="/ReceiveMoneyEdit?id=0">Add</v-btn>
+              <v-btn slot="activator" color="primary" dark class="mb-2" to="/InvoiceEdit?id=0">Add</v-btn>
             </v-card-title>
             <v-layout lg12>
               <v-flex lg12 class="pl-1 pr-1">
@@ -55,7 +55,7 @@
                           small
                           dark
                           style="height:22px;width:22px;font-size:13px;"
-                          :to="'/SaleReceiveMoneyEdit?id=' +row.SaleReceiveMoneyId"
+                          :to="'/InvoiceEdit?id=' +row.SaleInvoiceId"
                         >
                           <v-icon style="font-size:13px">edit</v-icon>
                         </v-btn>
@@ -160,7 +160,7 @@ export default {
       };
       axios({
         method: "put",
-        url: this.$urlApplication + "SaleReceiveMoney/GetSaleReceiveMoney",
+        url: this.$urlApplication + "SaleInvoice/GetSaleInvoice",
         data: pagedResult
       })
         .then(res => {
@@ -178,7 +178,7 @@ export default {
       this.IsSnackBar = true;
       axios({
         method: "delete",
-        url: this.$urlApplication + "SaleReceiveMoney/Delete?companyId=1&id=" + pId
+        url: this.$urlApplication + "SaleInvoice/Delete?companyId=1&id=" + pId
       })
         .then(res => {
           this.IsSnackBar = false;
@@ -190,7 +190,7 @@ export default {
     },
     deleteItem(item) {
       confirm("Are you sure you want to delete this item?") &&
-        this.delete(item.SaleReceiveMoneyId);
+        this.delete(item.SaleInvoiceId);
     }
   }
 };

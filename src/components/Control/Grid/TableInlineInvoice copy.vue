@@ -3,6 +3,7 @@
     <table id="csmTable">
       <thead>
         <th class="txtLeft">Product</th>
+        <th class="txtLeft">Warehouse</th>
         <th class="txtRight">Quantity</th>
         <th class="txtRight">Price</th>
         <th class="txtRight">Discount</th>
@@ -16,6 +17,7 @@
             <br />
             {{items.Description}}
           </td>
+          <td>{{items.WarehouseName}}</td>
           <td class="txtRight">{{items.Quantity}}</td>
           <td class="txtRight">{{items.Price}}</td>
           <td class="txtRight">{{items.DiscountAmount}}</td>
@@ -40,6 +42,15 @@
               v-on:input="onChildClickAutoCompelete"
             />
             <input v-model="Description" />
+          </td>
+          <td>
+            <select
+              v-model="selectWarehouse"
+              v-bind:class="[validation.requiredWarehouse ? '': 'txtRequired' ]"
+              style="width:100px"
+            >
+              <option v-for="option in itemsWarehouse" v-bind:value="option">{{ option.Name }}</option>
+            </select>
           </td>
           <td>
             <input
@@ -70,6 +81,7 @@
               min="0"
               v-model="DiscountAmount"
               @change="calculateLineTotal(tableRow)"
+              @keypress="preventNumericInput($event)"
               class="txtRight"
             />
           </td>
@@ -97,9 +109,12 @@ export default {
   components: {
     AutoComplete
   },
-  props: ["objData", "tableRows"],
+  props: ["objData", "objWarehouse", "tableRows"],
   data() {
     return {
+      selectWarehouse: null,
+      itemsWarehouse: null,
+
       AutoCompelete: "",
       ProductName: "",
       selectProduct: null,
@@ -113,7 +128,8 @@ export default {
         { requiredName: false },
         { requiredQuantity: false },
         { requiredPrice: false },
-        { requiredProduct: false }
+        { requiredProduct: false },
+        { requiredWarehouse: false }
       ],
       table_subtotal: 0,
       table_total: 0,
@@ -124,19 +140,29 @@ export default {
   },
   mounted: function() {
     this.itemsProduct = this.objData;
+    this.itemsWarehouse = this.objWarehouse;
     this.tableRow = this.tableRows;
   },
   watch: {
     tableRows: function() {
-      this.tableRow = this.tableRows == undefined ? [] : this.tableRows;
+      this.tableRow = this.tableRows;
     },
     objData: function() {
       this.itemsProduct = this.objData;
+    },
+    objWarehouse: function() {
+      this.itemsWarehouse = this.objWarehouse;
     },
     selectProduct: function(val) {
       this.validation.requiredProduct = this.isRequiredField(
         val,
         this.validation.requiredProduct
+      );
+    },
+    selectWarehouse: function(val) {
+      this.validation.requiredWarehouse = this.isRequiredField(
+        val,
+        this.validation.requiredWarehouse
       );
     },
     Quantity: function(val) {
@@ -160,6 +186,9 @@ export default {
   methods: {
     onChildClickAutoCompelete(obj) {
       this.AutoCompelete = obj;
+
+      this.WarehouseId = obj.WarehouseId;
+
       this.ProductName = obj.text;
       this.ProductId = obj.value;
       this.Price = obj.data.SalePrice;
@@ -168,27 +197,24 @@ export default {
     },
     calculateTotal() {
       var subtotal, total;
-      if (this.tableRow != null && this.tableRow != undefined) {
-        subtotal = this.tableRow.reduce(function(sum, product) {
-          var lineTotal = parseFloat(product.NetAmount);
-          if (!isNaN(lineTotal)) {
-            return sum + lineTotal;
-          }
-        }, 0);
-
-        this.table_subtotal = subtotal.toFixed(2);
-        total = subtotal * (this.table_tax / 100) + subtotal;
-        total = parseFloat(total);
-        if (!isNaN(total)) {
-          this.table_total = total.toFixed(2);
-        } else {
-          this.table_total = "0.00";
+      subtotal = this.tableRow.reduce(function(sum, product) {
+        var lineTotal = parseFloat(product.NetAmount);
+        if (!isNaN(lineTotal)) {
+          return sum + lineTotal;
         }
+      }, 0);
+      this.table_subtotal = subtotal.toFixed(2);
+      total = subtotal * (this.table_tax / 100) + subtotal;
+      total = parseFloat(total);
+      if (!isNaN(total)) {
+        this.table_total = total.toFixed(2);
+      } else {
+        this.table_total = "0.00";
       }
     },
     calculateLineTotal(items) {
       var items = this;
-      if (items != null && items != undefined) {
+      if (items != undefined) {
         var Price = items.Price;
         var Quantity = items.Quantity;
         var DiscountAmount = items.DiscountAmount;
@@ -201,6 +227,7 @@ export default {
         }
         this.calculateTotal();
       }
+      //this.emitToParent(obj);
     },
     deleteRow(index, items) {
       var idx = this.tableRow.indexOf(items);
@@ -213,6 +240,9 @@ export default {
     },
     addNewRow() {
       var ProductId = 0;
+      var WarehouseId = this.selectWarehouse.WarehouseId;
+      var WarehouseName = this.selectWarehouse.Name;
+
       var ProductName = "";
       var Quantity = this.Quantity;
       var Price = this.Price;
@@ -220,6 +250,11 @@ export default {
       var NetAmount = this.NetAmount;
       var Description = this.Description;
 
+      if (WarehouseId == undefined || WarehouseId.length == 0) {
+        this.validation.requiredWarehouse = false;
+      } else {
+        this.validation.requiredWarehouse = true;
+      }
       if (ProductId == undefined || ProductId.length == 0) {
         this.validation.requiredProduct = false;
       } else {
@@ -243,10 +278,11 @@ export default {
       ) {
         ProductName = this.ProductName; // this.selectProduct.text;
         ProductId = this.ProductId; //this.selectProduct.value;
-
         this.tableRow.push({
           ProductId: ProductId,
           ProductName: ProductName,
+          WarehouseId: WarehouseId,
+          WarehouseName: WarehouseName,
           Description: Description,
           Price: this.Price,
           Quantity: this.Quantity,
@@ -294,14 +330,41 @@ export default {
       }
       return result;
     },
+    // Triggered when `childToParent` event is emitted by the child.
+    // Define the method that emits data to the parent as the first parameter to `$emit()`.
+    // This is referenced in the <template> call in the parent. The second parameter is the payload.
     emitToParent(event) {
       this.$emit("childToParent", this.tableRowCompelete);
+    },
+
+    preventNumericInput(obj) {
+      // var input = obj.target.value;
+      // var result = 0;
+
+      // if (input == null || input == undefined) {
+      //   input = result;
+      // } else {
+      //   input = parseInt(input);
+      //   if (input < 0) {
+      //     obj.target.value = 0;
+      //   }
+      //   if (input > 100) {
+      //     obj.target.value = 100;
+      //   }
+      // }
+
+      var evt = obj.target;
+
+      var iKeyCode = evt.which ? evt.which : evt.keyCode;
+      if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+        return false;
     }
   }
 };
 </script>
 <style scoped>
 #csmTable {
+  /* font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; */
   border-collapse: collapse;
   width: 100%;
 }
@@ -316,11 +379,45 @@ export default {
   background-color: #f2f2f2;
 }
 
+/* #csmTable tr {
+  padding-top: 10px;
+  padding-bottom: 10px;
+} */
+/* 
+#csmTable tr:hover {
+  background-color: #ddd;
+} */
+
 #csmTable th {
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
   text-align: left;
   background-color: white;
   color: black;
 }
+/* .table-bordered,
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #dee2e6;
+}
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+}
+table {
+  border-collapse: collapse;
+}
+.table td,
+.table th {
+  padding: 0.75rem 0.45rem !important;
+}
+.align-top-table td,
+.align-top-table th {
+  vertical-align: top !important;
+} */
 .txtRequired {
   border: 1px solid red;
   border-radius: 4px;

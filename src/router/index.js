@@ -18,8 +18,8 @@ import OrderEdit from "@/components/Main/Sale/Order/OrderEdit"
 import Quotation from "@/components/Main/Sale/Quotation/Quotation"
 import QuotationEdit from "@/components/Main/Sale/Quotation/QuotationEdit"
 
-import ReceiveMoney from "@/components/Main/Sale/ReceiveMoney/ReceiveMoney"
-import ReceiveMoneyEdit from "@/components/Main/Sale/ReceiveMoney/ReceiveMoneyEdit"
+import SaleReceiveMoney from "@/components/Main/Sale/ReceiveMoney/ReceiveMoney"
+import SaleReceiveMoneyEdit from "@/components/Main/Sale/ReceiveMoney/ReceiveMoneyEdit"
 
 import RecurringInvoice from "@/components/Main/Sale/RecurringInvoice/RecurringInvoice"
 import RecurringInvoiceEdit from "@/components/Main/Sale/RecurringInvoice/RecurringInvoiceEdit"
@@ -206,14 +206,14 @@ export default new Router({
           component: QuotationEdit,
         },
         {
-          path: "/ReceiveMoney",
-          name: "ReceiveMoney",
-          component: ReceiveMoney,
+          path: "/SaleReceiveMoney",
+          name: "SaleReceiveMoney",
+          component: SaleReceiveMoney,
         },
         {
-          path: "/ReceiveMoneyEdit",
-          name: "ReceiveMoneyEdit",
-          component: ReceiveMoneyEdit,
+          path: "/SaleReceiveMoneyEdit",
+          name: "SaleReceiveMoneyEdit",
+          component: SaleReceiveMoneyEdit,
         },
         {
           path: "/RecurringInvoice",
@@ -236,13 +236,13 @@ export default new Router({
           component: RefundEdit,
         },
         {
-          path: "/Return",
-          name: "Return",
+          path: "/SaleReturn",
+          name: "SaleReturn",
           component: Return,
         },
         {
-          path: "/ReturnEdit",
-          name: "ReturnEdit",
+          path: "/SaleReturnEdit",
+          name: "SaleReturnEdit",
           component: ReturnEdit,
         },
         {

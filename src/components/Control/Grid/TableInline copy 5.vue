@@ -1,6 +1,16 @@
 <template>
   <div>
+    <!-- <table class="table-bordered align-top-table td"> -->
     <table id="csmTable">
+      <!-- <colgroup>
+        <col width="5%" class="ng-star-inserted" />
+        <col width="29%" />
+        <col width="14%" />
+        <col width="14%" />
+        <col width="14%" />
+        <col width="14%" />
+        <col width="10%" />
+      </colgroup>-->
       <thead>
         <th class="txtLeft">Product</th>
         <th class="txtRight">Quantity</th>
@@ -18,8 +28,8 @@
           </td>
           <td class="txtRight">{{items.Quantity}}</td>
           <td class="txtRight">{{items.Price}}</td>
-          <td class="txtRight">{{items.DiscountAmount}}</td>
-          <td class="txtRight">{{items.NetAmount}}</td>
+          <td class="txtRight">{{items.Discount}}</td>
+          <td class="txtRight">{{items.Amount}}</td>
           <td class="txtCenter">
             <v-icon
               style="font-size:18px"
@@ -36,10 +46,19 @@
             <auto-complete
               :Name="ProductName"
               :isAsync="true"
-              :apiUrl="'SaleInvoice/GetProduct?pSearch='"
+              :apiUrl="'SaleQuotation/GetProduct?pSearch='"
               v-on:input="onChildClickAutoCompelete"
             />
+            <!-- <select
+              v-model="selectProduct"
+              v-bind:class="[validation.requiredProduct ? '': 'txtRequired' ]"
+            >
+              <option v-for="option in itemsProduct" v-bind:value="option">{{ option.text }}</option>
+            </select>-->
+            <!-- <br /> -->
+            <!-- <div style="padding-top: 5px"> -->
             <input v-model="Description" />
+            <!-- </div> -->
           </td>
           <td>
             <input
@@ -68,13 +87,14 @@
               type="text"
               maxlength="12"
               min="0"
-              v-model="DiscountAmount"
+              v-model="Discount"
               @change="calculateLineTotal(tableRow)"
+              @keypress="preventNumericInput($event)"
               class="txtRight"
             />
           </td>
           <td>
-            <input readonly type="number" min="0" step=".01" v-model="NetAmount" class="txtRight" />
+            <input readonly type="number" min="0" step=".01" v-model="Amount" class="txtRight" />
           </td>
           <td class="txtCenter">
             <v-icon
@@ -107,8 +127,8 @@ export default {
       Description: "",
       Quantity: "",
       Price: "",
-      DiscountAmount: 0,
-      NetAmount: 0,
+      Discount: 0,
+      Amount: 0,
       validation: [
         { requiredName: false },
         { requiredQuantity: false },
@@ -128,7 +148,7 @@ export default {
   },
   watch: {
     tableRows: function() {
-      this.tableRow = this.tableRows == undefined ? [] : this.tableRows;
+      this.tableRow = this.tableRows;
     },
     objData: function() {
       this.itemsProduct = this.objData;
@@ -153,7 +173,7 @@ export default {
       );
       this.calculateLineTotal(this.tableRow);
     },
-    DiscountAmount: function(val) {
+    Discount: function(val) {
       this.calculateLineTotal(this.tableRow);
     }
   },
@@ -161,46 +181,44 @@ export default {
     onChildClickAutoCompelete(obj) {
       this.AutoCompelete = obj;
       this.ProductName = obj.text;
-      this.ProductId = obj.value;
+      this.ProductId = obj.value; //obj.split("~")[1];
       this.Price = obj.data.SalePrice;
-      this.DiscountAmount = 0;
+      this.Discount = 0;
       this.Quantity = 1;
     },
     calculateTotal() {
       var subtotal, total;
-      if (this.tableRow != null && this.tableRow != undefined) {
-        subtotal = this.tableRow.reduce(function(sum, product) {
-          var lineTotal = parseFloat(product.NetAmount);
-          if (!isNaN(lineTotal)) {
-            return sum + lineTotal;
-          }
-        }, 0);
-
-        this.table_subtotal = subtotal.toFixed(2);
-        total = subtotal * (this.table_tax / 100) + subtotal;
-        total = parseFloat(total);
-        if (!isNaN(total)) {
-          this.table_total = total.toFixed(2);
-        } else {
-          this.table_total = "0.00";
+      subtotal = this.tableRow.reduce(function(sum, product) {
+        var lineTotal = parseFloat(product.Amount);
+        if (!isNaN(lineTotal)) {
+          return sum + lineTotal;
         }
+      }, 0);
+      this.table_subtotal = subtotal.toFixed(2);
+      total = subtotal * (this.table_tax / 100) + subtotal;
+      total = parseFloat(total);
+      if (!isNaN(total)) {
+        this.table_total = total.toFixed(2);
+      } else {
+        this.table_total = "0.00";
       }
     },
     calculateLineTotal(items) {
       var items = this;
-      if (items != null && items != undefined) {
+      if (items != undefined) {
         var Price = items.Price;
         var Quantity = items.Quantity;
-        var DiscountAmount = items.DiscountAmount;
+        var Discount = items.Discount;
 
         var total = parseFloat(Price) * parseFloat(Quantity);
         // //Discount Calculation
-        total = total - total * (parseFloat(DiscountAmount) / 100);
+        total = total - total * (parseFloat(Discount) / 100);
         if (!isNaN(total)) {
-          items.NetAmount = total.toFixed(2);
+          items.Amount = total.toFixed(2);
         }
         this.calculateTotal();
       }
+      //this.emitToParent(obj);
     },
     deleteRow(index, items) {
       var idx = this.tableRow.indexOf(items);
@@ -216,8 +234,8 @@ export default {
       var ProductName = "";
       var Quantity = this.Quantity;
       var Price = this.Price;
-      var DiscountAmount = this.DiscountAmount;
-      var NetAmount = this.NetAmount;
+      var Discount = this.Discount;
+      var Amount = this.Amount;
       var Description = this.Description;
 
       if (ProductId == undefined || ProductId.length == 0) {
@@ -243,15 +261,14 @@ export default {
       ) {
         ProductName = this.ProductName; // this.selectProduct.text;
         ProductId = this.ProductId; //this.selectProduct.value;
-
         this.tableRow.push({
           ProductId: ProductId,
           ProductName: ProductName,
           Description: Description,
           Price: this.Price,
           Quantity: this.Quantity,
-          DiscountAmount: this.DiscountAmount,
-          NetAmount: this.NetAmount
+          Discount: this.Discount,
+          Amount: this.Amount
         });
         this.calculateTotal();
         this.calculateLineTotal(this.tableRow);
@@ -262,12 +279,12 @@ export default {
           total: this.table_total
         };
 
-        this.DiscountAmount = "";
+        this.Discount = "";
         this.Name = "";
         this.Description = "";
         this.Price = "";
         this.Quantity = "";
-        this.NetAmount = "";
+        this.Amount = "";
         this.refreshData();
       }
     },
@@ -294,14 +311,41 @@ export default {
       }
       return result;
     },
+    // Triggered when `childToParent` event is emitted by the child.
+    // Define the method that emits data to the parent as the first parameter to `$emit()`.
+    // This is referenced in the <template> call in the parent. The second parameter is the payload.
     emitToParent(event) {
       this.$emit("childToParent", this.tableRowCompelete);
+    },
+
+    preventNumericInput(obj) {
+      // var input = obj.target.value;
+      // var result = 0;
+
+      // if (input == null || input == undefined) {
+      //   input = result;
+      // } else {
+      //   input = parseInt(input);
+      //   if (input < 0) {
+      //     obj.target.value = 0;
+      //   }
+      //   if (input > 100) {
+      //     obj.target.value = 100;
+      //   }
+      // }
+
+      var evt = obj.target;
+
+      var iKeyCode = evt.which ? evt.which : evt.keyCode;
+      if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+        return false;
     }
   }
 };
 </script>
 <style scoped>
 #csmTable {
+  /* font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; */
   border-collapse: collapse;
   width: 100%;
 }
@@ -316,11 +360,45 @@ export default {
   background-color: #f2f2f2;
 }
 
+/* #csmTable tr {
+  padding-top: 10px;
+  padding-bottom: 10px;
+} */
+/* 
+#csmTable tr:hover {
+  background-color: #ddd;
+} */
+
 #csmTable th {
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
   text-align: left;
   background-color: white;
   color: black;
 }
+/* .table-bordered,
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #dee2e6;
+}
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+}
+table {
+  border-collapse: collapse;
+}
+.table td,
+.table th {
+  padding: 0.75rem 0.45rem !important;
+}
+.align-top-table td,
+.align-top-table th {
+  vertical-align: top !important;
+} */
 .txtRequired {
   border: 1px solid red;
   border-radius: 4px;

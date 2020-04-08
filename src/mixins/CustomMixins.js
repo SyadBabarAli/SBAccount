@@ -19,19 +19,22 @@ export const mixins = {
         pItems = items,
         result = null;
 
-      for (var items of pItems) {
-        var value = items[clmId];
+      if (pItems != null && pItems != undefined) {
+        
+        for (var items of pItems) {
+          var value = items[clmId];
 
-        //Set Default-Start
-        if (pId == null || pId == undefined || pId == 0) {
-          result = items;
-          break;
-        }
-        //Set Default-End
+          //Set Default-Start
+          if (pId == null || pId == undefined || pId == 0) {
+            result = items;
+            break;
+          }
+          //Set Default-End
 
-        if (pId == value) {
-          result = items;
-          break;
+          if (pId == value) {
+            result = items;
+            break;
+          }
         }
       }
       return result;

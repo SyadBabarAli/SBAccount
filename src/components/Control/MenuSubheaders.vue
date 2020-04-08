@@ -99,27 +99,27 @@ export default {
           name: "Sale",
           OrderBy: 1
         },
-        {
-          id: 2,
-          ParentId: 1,
-          name: "Quotation",
-          UserRulesDescription: "Quotation",
-          OrderBy: 1
-        },
-        {
-          id: 3,
-          ParentId: 1,
-          name: "Order",
-          UserRulesDescription: "Order",
-          OrderBy: 1
-        },
-        {
-          id: 4,
-          ParentId: 1,
-          name: "Delivery",
-          UserRulesDescription: "Delivery",
-          OrderBy: 1
-        },
+        // {
+        //   id: 2,
+        //   ParentId: 1,
+        //   name: "Quotation",
+        //   UserRulesDescription: "Quotation",
+        //   OrderBy: 1
+        // },
+        // {
+        //   id: 3,
+        //   ParentId: 1,
+        //   name: "Order",
+        //   UserRulesDescription: "Order",
+        //   OrderBy: 1
+        // },
+        // {
+        //   id: 4,
+        //   ParentId: 1,
+        //   name: "Delivery",
+        //   UserRulesDescription: "Delivery",
+        //   OrderBy: 1
+        // },
         {
           id: 5,
           ParentId: 1,
@@ -130,21 +130,21 @@ export default {
         {
           id: 6,
           ParentId: 1,
-          name: "Recurring Invoice",
+          name: "RecurringInvoice",
           UserRulesDescription: "Recurring Invoice",
           OrderBy: 1
         },
         {
           id: 7,
           ParentId: 1,
-          name: "Return",
-          UserRulesDescription: "Return",
+          name: "SaleReturn",
+          UserRulesDescription: "Sale Return",
           OrderBy: 1
         },
         {
           id: 8,
           ParentId: 1,
-          name: "Receive Money",
+          name: "ReceiveMoney",
           UserRulesDescription: "Receive Money",
           OrderBy: 1
         },
