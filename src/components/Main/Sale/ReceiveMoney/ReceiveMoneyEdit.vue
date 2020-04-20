@@ -190,9 +190,9 @@ export default {
       var data = response.data;
       this.editedItem = data;
       this.editItem.itemsSettingPaymentMode = data.SettingPaymentMode;
-      // this.listOfRecordDetails = data.SaleReceiveMoneyDetailModel;
-      // this.editedItem.SaleReceiveMoneyDetail =
-      //   data.SaleReceiveMoneyDetailModel;
+       this.listOfRecordDetails = data.SaleReceiveMoneyDetail;
+       this.editedItem.SaleReceiveMoneyDetail =
+         data.SaleReceiveMoneyDetail;
 
       // this.editedItem.SettingFrequencyId = data.SettingFrequencyId;
       // this.editedItem.itemsSettingFrequency = data.settingFrequencyModel;

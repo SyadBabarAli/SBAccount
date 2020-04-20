@@ -16,6 +16,9 @@
             <v-card>
               <v-layout>
                 <v-flex lg2 class="pa-1">
+                  Customer
+                  <br />
+                  <!-- <svgicon name="vue" width="200" height="200" color="#42b983 #35495e"></svgicon> -->
                   <auto-complete
                     :Name="this.editedItem.CustomerName"
                     :isAsync="true"
@@ -168,7 +171,16 @@ import axios from "axios";
 import { mixins } from "../../../../mixins/CustomMixins";
 import ButtonSmall from "../../../../components/control/ButtonSmall";
 import TableInline from "../../../../components/control/Grid/TableInlineInvoice";
-import AutoComplete from "../../../../components/control/AutoCompelete/AutoCompelete";
+import AutoComplete from "../../../../components/control/AutoCompelete/AutoCompeleteHtml";
+
+// import IconBase from "../../../../components/control/IconBase.vue";
+// import IconEnvelope from "../../../../components/control/icons/IconEnvelope.vue";
+// import IconCalendar from "../../../../components/control/icons/IconCalendar.vue";
+// import IconGarbage from "../../../../components/control/icons/IconGarbage.vue";
+// import IconImage from "../../../../components/control/icons/IconImage.vue";
+// import IconWrite from "../../../../components/control/icons/IconWrite.vue";
+// import IconMoon from "../../../../components/control/icons/IconMoon.vue";
+// import IconBox from "../../../../components/control/icons/IconBox.vue";
 
 export default {
   mixins: [mixins],
@@ -176,6 +188,15 @@ export default {
     ButtonSmall,
     TableInline,
     AutoComplete
+
+    // IconBase,
+    // IconEnvelope,
+    // IconCalendar,
+    // IconGarbage,
+    // IconImage,
+    // IconWrite,
+    // IconMoon,
+    // IconBox
   },
   data() {
     return {

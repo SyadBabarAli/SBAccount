@@ -1,8 +1,43 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import Home from "@/components/Main/Home/Home";
+import Dashboard from "@/components/Main/Dashboard/Dashboard";
 
+
+//Accounts
+
+import Expense from "@/components/Main/Accounts/Expense/Expense"
+import ExpenseEdit from "@/components/Main/Accounts/Expense/ExpenseEdit"
+
+import JournalEntry from "@/components/Main/Accounts/JournalEntry/JournalEntry"
+import JournalEntryEdit from "@/components/Main/Accounts/JournalEntry/JournalEntryEdit"
+
+
+//Inventory
+import StockMovement from "@/components/Main/Inventory/StockMovement/StockMovement"
+import StockMovementEdit from "@/components/Main/Inventory/StockMovement/StockMovementEdit"
+
+import StockAdjustment from "@/components/Main/Inventory/StockAdjustment/StockAdjustment"
+import StockAdjustmentEdit from "@/components/Main/Inventory/StockAdjustment/StockAdjustmentEdit"
+
+
+//Module ------------------Sale-------------------------------------------Start
+
+import PurchaseInvoice from "@/components/Main/Purchase/Invoice/Invoice"
+import PurchaseInvoiceEdit from "@/components/Main/Purchase/Invoice/InvoiceEdit"
+
+import PurchaseReturn from "@/components/Main/Purchase/Return/Return"
+import PurchaseReturnEdit from "@/components/Main/Purchase/Return/ReturnEdit"
+
+import PurchaseRefund from "@/components/Main/Purchase/Refund/Refund"
+import PurchaseRefundEdit from "@/components/Main/Purchase/Refund/RefundEdit"
+
+
+import MakePayment from "@/components/Main/Purchase/MakePayment/MakePayment"
+import MakePaymentEdit from "@/components/Main/Purchase/MakePayment/MakePaymentEdit"
+
+
+//Module ------------------Sale-------------------------------------------Start
 import SaleQuotation from "@/components/Main/Sale/Quotation/Quotation"
 import SaleOrder from "@/components/Main/Sale/Order/Order"
 
@@ -32,20 +67,21 @@ import ReturnEdit from "@/components/Main/Sale/Return/ReturnEdit"
 
 import Settlement from "@/components/Main/Sale/Settlement/Settlement"
 import SettlementEdit from "@/components/Main/Sale/Settlement/SettlementEdit"
-//SETUPS:
-//LIST:
+//Module ------------------Sale-------------------------------------------End
+
+////////////////////////////////////////Setup/////////////////////////////////////////////////
+//List
 import Customers from "@/components/Main/Setup/List/Customers/Customers"
 import CustomersEdit from "@/components/Main/Setup/List/Customers/CustomersEdit"
 import Employees from "@/components/Main/Setup/List/Employees/Employees"
 import EmployeesEdit from "@/components/Main/Setup/List/Employees/EmployeesEdit"
 import Products from "@/components/Main/Setup/List/Products/Products"
 import ProductsEdit from "@/components/Main/Setup/List/Products/ProductsEdit"
-import SalesPersons from "@/components/Main/Setup/List/SalesPersons/SalesPersons"
-import SalesPersonsEdit from "@/components/Main/Setup/List/SalesPersons/SalesPersonsEdit"
+import SalesPerson from "@/components/Main/Setup/List/SalesPerson/SalesPerson"
+import SalesPersonEdit from "@/components/Main/Setup/List/SalesPerson/SalesPersonEdit" 
 import Vendors from "@/components/Main/Setup/List/Vendors/Vendors"
 import VendorsEdit from "@/components/Main/Setup/List/Vendors/VendorsEdit"
-//SETUPS:
-//CATEGORIES:
+//Categories
 import CategoryBrand from "@/components/Main/Setup/Categories/Brands/Brands"
 import BrandsEdit from "@/components/Main/Setup/Categories/Brands/BrandsEdit"
 import CategoryCustomer from "@/components/Main/Setup/Categories/CustomerCategories/CustomerCategories"
@@ -58,8 +94,7 @@ import CategoryProduct from "@/components/Main/Setup/Categories/ProductCategorie
 import ProductCategoriesEdit from "@/components/Main/Setup/Categories/ProductCategories/ProductCategoriesEdit"
 import CategoryVendor from "@/components/Main/Setup/Categories/VendorCategories/VendorCategories"
 import VendorCategoriesEdit from "@/components/Main/Setup/Categories/VendorCategories/VendorCategoriesEdit"
-//SETUPS:
-//General:
+//General
 import AdjustmentsType from "@/components/Main/Setup/General/AdjustmentsType/AdjustmentsType"
 import AdjustmentsTypeEdit from "@/components/Main/Setup/General/AdjustmentsType/AdjustmentsTypeEdit"
 import CustomFields from "@/components/Main/Setup/General/CustomFields/CustomFields"
@@ -68,7 +103,6 @@ import GeneralTax from "@/components/Main/Setup/General/Taxes/Taxes"
 import TaxesEdit from "@/components/Main/Setup/General/Taxes/TaxesEdit"
 import GeneralWarehouse from "@/components/Main/Setup/General/Warehouses/Warehouses"
 import WarehousesEdit from "@/components/Main/Setup/General/Warehouses/WarehousesEdit"
-//SETUPS:
 //Sales Geography
 import Areas from "@/components/Main/Setup/SalesGeography/Areas/Areas"
 import AreasEdit from "@/components/Main/Setup/SalesGeography/Areas/AreasEdit"
@@ -80,8 +114,7 @@ import Territories from "@/components/Main/Setup/SalesGeography/Territories/Terr
 import TerritoriesEdit from "@/components/Main/Setup/SalesGeography/Territories/TerritoriesEdit"
 import Zones from "@/components/Main/Setup/SalesGeography/Zones/Zones"
 import ZonesEdit from "@/components/Main/Setup/SalesGeography/Zones/ZonesEdit"
-//SETUPS:
-//GROUPS:
+//Groups
 import Branch from "@/components/Main/Setup/Groups/Branches/Branch"
 import BranchesEdit from "@/components/Main/Setup/Groups/Branches/BranchesEdit"
 
@@ -94,12 +127,6 @@ import KBGlobalSearch from "@/components/Main/KB/KBGlobalSearch";
 import ArticleEdit from "@/components/Main/KB/Article/ArticleEdit";
 
 Vue.use(Router);
-
-//import Vue from "vue";
-import store from "../store";
-import axios from "axios";
-//import { mixins } from "../mixins/CustomMixins";
-
 
 export default new Router({
   //mixins: [mixins],
@@ -118,7 +145,6 @@ export default new Router({
           component: ArticleEdit,
           name: "ArticleEdit",
         },
-
       ]
     },
     {
@@ -155,6 +181,12 @@ export default new Router({
         //   component: CategoryBrand,
         //   name: "CategoryBrand",
         // },
+        {
+          path: "/",
+          component: Dashboard,
+          name: "Dashboard",
+        },
+
         {
           path: "/SaleQuotation",
           component: SaleQuotation,
@@ -255,8 +287,49 @@ export default new Router({
           name: "SettlementEdit",
           component: SettlementEdit,
         },
-        //SETUP:
-        //LIST:
+
+        {
+          path: "/PurchaseInvoice",
+          name: "PurchaseInvoice",
+          component: PurchaseInvoice,
+        },
+        {
+          path: "/PurchaseInvoiceEdit",
+          name: "PurchaseInvoiceEdit",
+          component: PurchaseInvoiceEdit,
+        },
+        {
+          path: "/PurchaseReturn",
+          name: "PurchaseReturn",
+          component: PurchaseReturn,
+        },
+        {
+          path: "/PurchaseReturnEdit",
+          name: "PurchaseReturnEdit",
+          component: PurchaseReturnEdit,
+        },
+        {
+          path: "/PurchaseRefund",
+          name: "PurchaseRefund",
+          component: PurchaseRefund,
+        },
+        {
+          path: "/PurchaseRefundEdit",
+          name: "PurchaseRefundEdit",
+          component: PurchaseRefundEdit,
+        },
+
+        {
+          path: "/MakePayment",
+          name: "Make Payment",
+          component: MakePayment,
+        },
+        {
+          path: "/MakePaymentEdit",
+          name: "MakePaymentEdit",
+          component: MakePaymentEdit,
+        },
+        //List//////////////////////////////////////////
         {
           path: "/Customers",
           name: "Customers",
@@ -288,20 +361,20 @@ export default new Router({
           component: ProductsEdit,
         },
         {
-          path: "/SalesPersons",
-          name: "SalesPersons",
-          component: SalesPersons,
+          path: "/SalesPerson",
+          name: "SalesPerson",
+          component: SalesPerson,
         },
         {
-          path: "/SalesPersonsEdit",
-          name: "SalesPersonsEdit",
-          component: SalesPersonsEdit,
+          path: "/SalesPersonEdit",
+          name: "SalesPersonEdit",
+          component: SalesPersonEdit,
         },
-        // {
-        //   path: "/CategoryVendor",
-        //   name: "CategoryVendor",
-        //   component: CategoryVendor,
-        // },
+        {
+          path: "/Vendors",
+          name: "Vendors",
+          component: Vendors,
+        },
         {
           path: "/VendorsEdit",
           name: "VendorsEdit",
@@ -468,6 +541,53 @@ export default new Router({
           name: "BranchesEdit",
           component: BranchesEdit,
         },
+
+        {
+          path: "/Expense",
+          name: "Expense",
+          component: Expense,
+        },
+        {
+          path: "/ExpenseEdit",
+          name: "ExpenseEdit",
+          component: ExpenseEdit,
+        },
+
+
+        {
+          path: "/JournalEntry",
+          name: "JournalEntry",
+          component: JournalEntry,
+        },
+        {
+          path: "/JournalEntryEdit",
+          name: "JournalEntryEdit",
+          component: JournalEntryEdit,
+        },
+
+        {
+          path: "/StockMovement",
+          name: "StockMovement",
+          component: StockMovement,
+        },
+        {
+          path: "/StockMovementEdit",
+          name: "StockMovementEdit",
+          component: StockMovementEdit,
+        },
+
+
+        {
+          path: "/StockAdjustment",
+          name: "StockAdjustment",
+          component: StockAdjustment,
+        },
+        {
+          path: "/StockAdjustmentEdit",
+          name: "StockAdjustmentEdit",
+          component: StockAdjustmentEdit,
+        },
+
 
         // otherwise redirect to home
         //{ path: "*", redirect: "/" }

@@ -149,6 +149,13 @@ import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.use(CKEditor);
 
 
+// import VueSVGIcon from 'vue-svgicon'
+// Vue.use(VueSVGIcon)
+
+import SvgIcon from 'vue-svgicon'
+Vue.use(SvgIcon, {
+  tagName: 'svgicon'
+})
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,28 +1,27 @@
 <template>
   <div class="autocomplete" style="width:100%">
-    <v-text-field
-      label="Customer"
-      placeholder="Placeholder"
+    Customer
+    <br />
+    <!-- v-on:blur="onBlur" -->
+    <input
       type="text"
-      @input="onChange"
+      list="results"
       v-model="search"
-      v-on:blur="onBlur"
+      @input="onChange"
       @keyup.down="onArrowDown"
       @keyup.up="onArrowUp"
       @keyup.enter="onEnter"
-    ></v-text-field>
-    <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>
-    <ul v-show="isOpen" class="autocomplete-results">
-      <li v-if="isLoading" class="loading">Loading results...</li>
-      <li
-        v-else
+    />
+    <button class="close-icon" type="reset"></button>
+
+    <datalist id="results">
+      <option
+        v-show="isDL"
         v-for="(result, i) in results"
         :key="i"
         @click="setResult(result)"
-        class="autocomplete-result"
-        :class="{ 'is-active': i === arrowCounter }"
-      >{{ result.text }}</li>
-    </ul>
+      >{{result.text}}</option>
+    </datalist>
   </div>
 </template>
 <script>
@@ -42,6 +41,7 @@ export default {
 
   data() {
     return {
+      isDL: true,
       isOpen: false,
       results: [],
       search: "",
@@ -50,25 +50,23 @@ export default {
       message: ""
     };
   },
-  // watch: {
-
-  // },
-  // mounted: function() {
-  //   this.search = this.name;
-  //   debugger;
-  // },
   methods: {
-    // emitToParent(event) {
-    //   this.$emit("childToParent", this.search);
-    // },
+    onBlur(obj) {
+      debugger;
+      //Set autoselection when user type most match value
+      var v1 = obj.target._value;
+      for (var items of this.results) {
+        this.setResult(items);
+        break;
+      }
+      this.isOpen = false;
+    },
     fillData(search) {
       axios({
         method: "get",
         url: this.$urlApplication + this.apiUrl + this.search
-        // this.$urlApplication + "TrendChart/GetUserDim?pSearch=" + this.search
       })
         .then(res => {
-          //this.results = [];
           for (let items of res.data) {
             var text = (items.Text = null
               ? "Empty"
@@ -87,40 +85,38 @@ export default {
         });
     },
     onChange() {
-      // Let's warn the parent that a change was made
-      // this.$emit("input", this.search);
-      // Is the data given by an outside ajax request?
-      if (this.isAsync) {
-        this.isLoading = true;
-        this.isOpen = true;
-        this.results = [];
+      var obj = this.results.filter(w => w.text == this.search);
 
-        // setTimeout(() => {
-        //   this.message =
-        this.fillData();
-
-        //}, 1000);
+      if (obj.length == 0) {
+        if (this.isAsync) {
+          this.isLoading = true;
+          this.isOpen = true;
+          this.results = [];
+          this.fillData();
+        } else {
+          this.filterResults();
+          this.isOpen = true;
+        }
       } else {
-        // Let's search our flat array
-        this.filterResults();
-
-        this.isOpen = true;
+        this.setResult(obj);
       }
     },
 
     filterResults() {
-      // first uncapitalize all the things
       var resutl = "";
       this.results = this.items.filter(item => {
         resutl = item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
       });
       return resutl;
     },
-    setResult(result) {
-      this.search = result.text.trim();
+    setResult(obj) {
+      this.isDL = false;
+      this.search = obj[0].text.trim();
+      var id = obj[0].value;
       this.isOpen = false;
-      var result2 = this.search + "~" + result.value;
-      this.$emit("input", result2);
+      var result = this.search + "~" + id;
+
+      this.$emit("input", result);
     },
     onArrowDown(evt) {
       if (this.arrowCounter < this.results.length) {
@@ -138,19 +134,11 @@ export default {
       this.arrowCounter = -1;
     },
     handleClickOutside(evt) {
+      debugger;
       if (!this.$el.contains(evt.target)) {
         this.isOpen = false;
         this.arrowCounter = -1;
       }
-    },
-    onBlur(obj) {
-      //Set autoselection when user type most match value
-      var v1 = obj.target._value;
-      for (var items of this.results) {
-        this.setResult(items);
-        break;
-      }
-      this.isOpen = false;
     }
   },
   watch: {
@@ -165,21 +153,21 @@ export default {
       }
     }
   },
-  mounted() {
-    document.addEventListener("click", this.handleClickOutside);
-    this.search = this.Name;
-  },
-  destroyed() {
-    document.removeEventListener("click", this.handleClickOutside);
-  }
+  // mounted() {
+  //   document.addEventListener("click", this.handleClickOutside);
+  //   this.search = this.Name;
+  // },
+  // destroyed() {
+  //   document.removeEventListener("click", this.handleClickOutside);
+  // }
 };
 </script> 
-<style>
-.autocomplete {
+<style scoped>
+/* .autocomplete {
   position: relative;
   width: 130px;
-}
-
+} */
+/* 
 .autocomplete-results {
   padding: 0;
   margin: 0;
@@ -195,25 +183,62 @@ export default {
   margin-right: 0px;
   margin-bottom: 0px;
   margin-left: 0px;
-}
+} */
 
-.autocomplete-result {
+/* .autocomplete-result {
   list-style: none;
   text-align: left;
   padding: 4px 2px;
   cursor: pointer;
-}
-
+} */
+/* 
 .autocomplete-result:hover {
   background-color: #4aae9b;
   color: white;
+} */
+
+/* input {
+  padding: 0.75rem;
+  color: #2a2a2a;
+  background-color: #fff;
+  border: 2px solid #dadfe6;
+  font-family: Roboto;
+  border-radius: 0.375rem;
+  height: 20px;
+  width: 100%;
+  margin-top: 4px;
+}
+*/
+
+input::-webkit-calendar-picker-indicator {
+  opacity: 100;
 }
 
-.inputClass {
-  border: 1px solid gray;
-  border-radius: 4px;
+input {
+  position: relative;
+  padding: 0.75rem;
+  color: #2a2a2a;
+  background-color: #fff;
+  border: 2px solid #dadfe6;
+  font-family: Roboto;
+  border-radius: 0.375rem;
+  height: 20px;
   width: 100%;
-  -moz-appearance: none;
-  -webkit-appearance: none;
+  margin-top: 4px;
 }
+
+/*
+input:before {
+  content: "\f073";
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position:absolute;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
+} */
 </style>

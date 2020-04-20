@@ -8,7 +8,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>-->
         <v-list dense>
-          <v-list-tile to="/Dashboard">
+          <v-list-tile to="/">
             <v-list-tile-action class="pl-3">
               <v-icon>dashboard</v-icon>
             </v-list-tile-action>
@@ -99,27 +99,6 @@ export default {
           name: "Sale",
           OrderBy: 1
         },
-        // {
-        //   id: 2,
-        //   ParentId: 1,
-        //   name: "Quotation",
-        //   UserRulesDescription: "Quotation",
-        //   OrderBy: 1
-        // },
-        // {
-        //   id: 3,
-        //   ParentId: 1,
-        //   name: "Order",
-        //   UserRulesDescription: "Order",
-        //   OrderBy: 1
-        // },
-        // {
-        //   id: 4,
-        //   ParentId: 1,
-        //   name: "Delivery",
-        //   UserRulesDescription: "Delivery",
-        //   OrderBy: 1
-        // },
         {
           id: 5,
           ParentId: 1,
@@ -144,7 +123,7 @@ export default {
         {
           id: 8,
           ParentId: 1,
-          name: "ReceiveMoney",
+          name: "SaleReceiveMoney",
           UserRulesDescription: "Receive Money",
           OrderBy: 1
         },
@@ -158,7 +137,7 @@ export default {
         {
           id: 10,
           ParentId: 1,
-          name: "Settlement",
+          name: "SaleSettlement",
           UserRulesDescription: "Settlement",
           OrderBy: 1
         },
@@ -166,50 +145,35 @@ export default {
           id: 11,
           ParentId: 0,
           Icon: "add_shopping_cart",
-          // Icon: "shoping_basket",
           name: "Purchase",
           UserRulesDescription: "Purchase",
           OrderBy: 1
         },
         {
-          id: 12,
-          ParentId: 11,
-          name: "Order",
-          UserRulesDescription: "Order",
-          OrderBy: 1
-        },
-        {
-          id: 13,
-          ParentId: 11,
-          name: "Good Receiving",
-          UserRulesDescription: "Good Receiving",
-          OrderBy: 1
-        },
-        {
           id: 14,
           ParentId: 11,
-          name: "Invoice",
+          name: "PurchaseInvoice",
           UserRulesDescription: "Invoice",
           OrderBy: 1
         },
         {
           id: 15,
           ParentId: 11,
-          name: "Return",
+          name: "PurchaseReturn",
           UserRulesDescription: "Return",
           OrderBy: 1
         },
         {
           id: 16,
           ParentId: 11,
-          name: "Make Payment",
-          UserRulesDescription: "Make Payment",
+          name: "MakePayment",
+          UserRulesDescription: "MakePayment",
           OrderBy: 1
         },
         {
           id: 17,
           ParentId: 11,
-          name: "Refund",
+          name: "PurchaseRefund",
           UserRulesDescription: "Refund",
           OrderBy: 1
         },
@@ -221,39 +185,25 @@ export default {
           OrderBy: 1
         },
         {
-          id: 19,
-          ParentId: 0,
-          Icon: "desktop_mac",
-          name: "POS",
-          OrderBy: 1
-        },
-        {
-          id: 20,
-          ParentId: 19,
-          name: "Terminal",
-          UserRulesDescription: "Terminal",
-          OrderBy: 1
-        },
-        {
-          id: 21,
-          ParentId: 19,
-          name: "POS",
-          UserRulesDescription: "POS",
-          OrderBy: 1
-        },
-        {
-          id: 22,
+          id: 400,
           ParentId: 0,
           Icon: "account_tree",
           name: "Accounts",
           OrderBy: 1
         },
+
         {
-          id: 23,
-          ParentId: 22,
+          id: 401,
+          ParentId: 400,
           name: "Expense",
-          UserRulesDescription: "Expense",
-          OrderBy: 1
+          UserRulesDescription: "Expense"
+        },
+
+        {
+          id: 402,
+          ParentId: 400,
+          name: "JournalEntry",
+          UserRulesDescription: "Journal Entry"
         },
         {
           id: 24,
@@ -263,14 +213,29 @@ export default {
           OrderBy: 1
         },
         {
-          id: 25,
+          id: 30,
           ParentId: 0,
-          Icon: "settings",
-          name: "Setup",
+          Icon: "rotate_right",
+          name: "Inventory",
           OrderBy: 1
         },
+
         {
-          id: 26,
+          id: 31,
+          ParentId: 30,
+          name: "StockMovement",
+          UserRulesDescription: "Stock Movement"
+        },
+
+        {
+          id: 32,
+          ParentId: 30,
+          name: "StockAdjustment",
+          UserRulesDescription: "Stock Adjustment"
+        },
+
+        {
+          id: 101,
           ParentId: 25,
           name: "Customers",
           UserRulesDescription: "Customers",
@@ -288,6 +253,21 @@ export default {
           ParentId: 25,
           name: "Product",
           UserRulesDescription: "Product",
+          OrderBy: 1
+        },
+        {
+          id: 1000,
+          ParentId: 0,
+          Icon: "settings",
+          name: "Reports",
+          UserRulesDescription: "Reports",
+          OrderBy: 1
+        },
+        {
+          id: 1001,
+          ParentId: 1000,
+          name: "Report",
+          UserRulesDescription: "Report",
           OrderBy: 1
         }
       ];

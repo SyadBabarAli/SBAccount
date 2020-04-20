@@ -16,7 +16,13 @@
                 single-line
                 hide-details
               ></v-text-field>
-              <v-btn slot="activator" color="primary" dark class="mb-2" to="/ReceiveMoneyEdit?id=0">Add</v-btn>
+              <v-btn
+                slot="activator"
+                color="primary"
+                dark
+                class="mb-2"
+                to="/SaleReceiveMoneyEdit?id=0"
+              >Add</v-btn>
             </v-card-title>
             <v-layout lg12>
               <v-flex lg12 class="pl-1 pr-1">
@@ -24,29 +30,23 @@
                   <thead>
                     <tr>
                       <th v-on:click="sortTable('Number')">Number</th>
-                      <th v-on:click="sortTable('InvoiceDate')">Invoice Date</th>
+                      <th v-on:click="sortTable('ReceiveMoneyDate')">Date</th>
                       <th v-on:click="sortTable('CustomerName')">Customer</th>
                       <th v-on:click="sortTable('Reference')">Reference</th>
-                      <th v-on:click="sortTable('BranchName')">Branch</th>
-                      <th v-on:click="sortTable('SalePersonName')">SalePerson</th>
-                      <th v-on:click="sortTable('InvoiceDueDate')">Invoice DueDate</th>
-                      <th v-on:click="sortTable('GrossAmount')">Gross Amount</th>
-                      <th v-on:click="sortTable('NetAmount')">Net Amount</th>
+                      <th v-on:click="sortTable('TotalAmount')">Total Amount</th>
+                      <th v-on:click="sortTable('OutstandingBalance')">Unadjusted Amount</th>
                       <th v-on:click="sortTable('StatusName')">Status</th>
-                      <th>Action</th>
+                      <th class="text-xs-center">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="row in rows">
                       <td class="text-xs-left">{{row.Number}}</td>
-                      <td class="text-xs-left">{{row.InvoiceDate | momentConvertDate }}</td>
+                      <td class="text-xs-left">{{row.ReceiveMoneyDate | momentConvertDate }}</td>
                       <td class="text-xs-left">{{row.CustomerName}}</td>
                       <td class="text-xs-left">{{row.Reference}}</td>
-                      <td class="text-xs-left">{{row.BranchName}}</td>
-                      <td class="text-xs-left">{{row.SalePersonName}}</td>
-                      <td class="text-xs-left">{{row.InvoiceDueDate | momentConvertDate}}</td>
-                      <td class="text-xs-right">{{row.GrossAmount}}</td>
-                      <td class="text-xs-right">{{row.NetAmount}}</td>
+                      <td class="text-xs-right">{{row.TotalAmount}}</td>
+                      <td class="text-xs-right">{{row.OutstandingBalance}}</td>
                       <td class="text-xs-left">{{row.StatusName}}</td>
                       <td class="justify-center layout px-0">
                         <v-btn
@@ -178,7 +178,8 @@ export default {
       this.IsSnackBar = true;
       axios({
         method: "delete",
-        url: this.$urlApplication + "SaleReceiveMoney/Delete?companyId=1&id=" + pId
+        url:
+          this.$urlApplication + "SaleReceiveMoney/Delete?companyId=1&id=" + pId
       })
         .then(res => {
           this.IsSnackBar = false;

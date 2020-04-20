@@ -9,8 +9,11 @@
               <v-toolbar-title>Details</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
               <v-spacer></v-spacer>
+
+              <!-- <p>Value: {{ search }}</p> -->
               <v-text-field
-                v-model="search"
+                @keyup="searchTxt"
+                v-model="value"
                 append-icon="search"
                 label="Search"
                 single-line
@@ -23,17 +26,49 @@
                 <table class="csmTable">
                   <thead>
                     <tr>
-                      <th v-on:click="sortTable('Number')">Number</th>
-                      <th v-on:click="sortTable('InvoiceDate')">Invoice Date</th>
-                      <th v-on:click="sortTable('CustomerName')">Customer</th>
-                      <th v-on:click="sortTable('Reference')">Reference</th>
-                      <th v-on:click="sortTable('BranchName')">Branch</th>
-                      <th v-on:click="sortTable('SalePersonName')">SalePerson</th>
-                      <th v-on:click="sortTable('InvoiceDueDate')">Invoice DueDate</th>
-                      <th v-on:click="sortTable('GrossAmount')">Gross Amount</th>
-                      <th v-on:click="sortTable('NetAmount')">Net Amount</th>
-                      <th v-on:click="sortTable('StatusName')">Status</th>
-                      <th>Action</th>
+                      <th v-on:click="sortTable('Number',$event)">
+                        Number
+                        <v-icon style="font-size:15px;">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('InvoiceDate',$event)">
+                        Invoice Date
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('CustomerName',$event)">
+                        Customer
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('Reference',$event)">
+                        Reference
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('BranchName',$event)">
+                        Branch
+                        <!-- <div style="text-align: right;"> -->
+                          <v-icon style="font-size:15px;text-align: right;">keyboard_arrow_up</v-icon>
+                        <!-- </div> -->
+                      </th>
+                      <th v-on:click="sortTable('SalePersonName',$event)">
+                        Sale Person
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('InvoiceDueDate',$event)">
+                        Invoice DueDate
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('GrossAmount',$event)">
+                        Gross Amount
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('NetAmount',$event)">
+                        Net Amount
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th v-on:click="sortTable('StatusName',$event)">
+                        Status
+                        <v-icon style="font-size:15px">keyboard_arrow_up</v-icon>
+                      </th>
+                      <th class="text-xs-center">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -108,6 +143,10 @@ export default {
   },
   data() {
     return {
+      value: "",
+      outputValue: "",
+      timeout: null,
+      //////////
       currentPage: 1,
       pageSize: 2,
       ascending: false,
@@ -123,8 +162,7 @@ export default {
     };
   },
   watch: {
-    search(val) {
-      this.search = val;
+    search() {
       this.currentPage = 1;
       this.tableLoad();
     },
@@ -138,7 +176,32 @@ export default {
     this.tableLoad();
   },
   methods: {
-    sortTable: function sortTable(col) {
+    // after entering some text in the input field
+    // the text will be shown after 1 second
+    searchTxt: function() {
+      // clear timeout variable
+      clearTimeout(this.timeout);
+
+      var self = this;
+      this.timeout = setTimeout(function() {
+        // enter this block of code after 1 second
+        // handle stuff, call search API etc.
+        self.search = self.value;
+      }, 500);
+    },
+    //sortTable: function sortTable(col) {
+
+    sortTable: function sortTable(col, obj) {
+      obj =
+        obj.toElement.lastElementChild == null
+          ? obj.srcElement
+          : obj.toElement.lastElementChild;
+      if (obj.innerText == "keyboard_arrow_down") {
+        obj.innerText = "keyboard_arrow_up";
+      } else if (obj.innerText == "keyboard_arrow_up") {
+        obj.innerText = "keyboard_arrow_down";
+      }
+
       this.sortColumn = col;
       this.ascending = !this.ascending;
       this.asc = this.ascending;
@@ -212,5 +275,10 @@ export default {
   text-align: left;
   background-color: white;
   color: black;
+  cursor: pointer;
+}
+
+.csmTable th i {
+  text-align: right;
 }
 </style>

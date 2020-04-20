@@ -1,25 +1,44 @@
 <template>
   <div class="autocomplete" style="width:100%">
-    <input
-      label="Customer"
-      placeholder="Placeholder"
-      class="inputClass"
-      type="text"
-      v-on:blur="onBlur"
-      @input="onChange"
-      v-model="search"
-      @keyup.down="onArrowDown"
-      @keyup.up="onArrowUp"
-      @keyup.enter="onEnter"
-    />
-    <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>
+    <div id="container">
+      <div id="left">
+        <input
+          type="text"
+          style="outline: none;"
+          v-model="search"
+          @input="onChange"
+          @keyup.down="onArrowDown"
+          @keyup.up="onArrowUp"
+          @keyup.enter="onEnter"
+          maxlength="15"
+        />
+      </div>
+      <div id="secondDiv">
+        <v-progress-circular v-show="isLoading" :size="20" :width="2" color="black" indeterminate></v-progress-circular>
+      </div>
+      <div id="center">
+        <i
+          class="material-icons cursorCSM"
+          style="font-size: 13px;"
+          v-on:click="clear"
+          v-show="search != null && search.length  > 0 ? true : false"
+        >clear</i>
+      </div>
+      <div id="right">
+        <i
+          class="material-icons cursorPointerCSM"
+          v-on:click="arrowDropDown"
+          align="left"
+        >arrow_drop_down</i>
+      </div>
+    </div>
     <ul v-show="isOpen" class="autocomplete-results">
       <li v-if="isLoading" class="loading">Loading results...</li>
       <li
         v-else
         v-for="(result, i) in results"
         :key="i"
-        @click="setResult(result)"
+        @click="emitResult(result)"
         class="autocomplete-result"
         :class="{ 'is-active': i === arrowCounter }"
       >{{ result.text }}</li>
@@ -28,6 +47,7 @@
 </template>
 <script>
 import axios from "axios";
+
 export default {
   name: "autocomplete",
   template: "#autocomplete",
@@ -40,7 +60,6 @@ export default {
       default: false
     }
   },
-
   data() {
     return {
       isOpen: false,
@@ -51,22 +70,18 @@ export default {
       message: ""
     };
   },
-  // watch: {
-
-  // },
-  // mounted: function() {
-  //   this.search = this.name;
-  //   debugger;
-  // },
   methods: {
-    // emitToParent(event) {
-    //   this.$emit("childToParent", this.search);
-    // },
-    fillData(search) {
+    arrowDropDown(obj) {
+      this.search = "";
+      this.onChange();
+    },
+    clear(obj) {
+      this.search = "";
+    },
+    fillData() {
       axios({
         method: "get",
         url: this.$urlApplication + this.apiUrl + this.search
-        // this.$urlApplication + "TrendChart/GetUserDim?pSearch=" + this.search
       })
         .then(res => {
           //this.results = [];
@@ -76,48 +91,51 @@ export default {
               : (items.Text = undefined ? "Empty" : items.Text));
             var result = {
               value: items.Value,
-              text: text,
-              data: items
+              text: text
             };
-
             this.results.push(result);
             this.isLoading = false;
           }
         })
         .catch(error => {
           this.isLoading = false;
+          //When product was not found
+          if (this.results.length == 0) {
+            var text = 'Add customer "' + this.search + '"';
+            this.results.push({
+              value: 0,
+              text: text
+            });
+          }
         });
     },
     onChange() {
-      // Let's warn the parent that a change was made
-      // this.$emit("input", this.search);
-      // Is the data given by an outside ajax request?
       if (this.isAsync) {
         this.isLoading = true;
         this.isOpen = true;
         this.results = [];
 
-        // setTimeout(() => {
-        //   this.message =
         this.fillData();
-        //}, 1000);
       } else {
-        // Let's search our flat array
         this.filterResults();
         this.isOpen = true;
       }
     },
 
     filterResults() {
-      // first uncapitalize all the things
-      this.results = this.items.filter(item => {
-        return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+      var result = this.items.filter(item => {
+        item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+
+        this.results = result;
+        return result;
       });
     },
-    setResult(result) {
-      this.search = result.text.trim();
+    emitResult(obj) {
+      var value = obj.value;
+      var text = obj.text.trim();
+      this.search = text;
       this.isOpen = false;
-      //var result2 = this.search + "~" + result.value;
+      var result = text + "~" + value;
       this.$emit("input", result);
     },
     onArrowDown(evt) {
@@ -144,8 +162,9 @@ export default {
     onBlur(obj) {
       //Set autoselection when user type most match value
       var v1 = obj.target._value;
+      debugger;
       for (var items of this.results) {
-        this.setResult(items);
+        this.emitResult(items);
         break;
       }
       this.isOpen = false;
@@ -194,43 +213,128 @@ export default {
   margin-bottom: 0px;
   margin-left: 0px;
 }
-
 .autocomplete-result {
   list-style: none;
   text-align: left;
   padding: 4px 2px;
   cursor: pointer;
 }
-
 .autocomplete-result:hover {
   background-color: #4aae9b;
   color: white;
 }
 
+.borderColor {
+  border: 2px solid #dadfe6 !important;
+  border-radius: 4px;
+}
+
 .inputClass {
-  padding: 0.75rem;
-  color: #2a2a2a;
-  background-color: #fff;
-  border: 2px solid #dadfe6;
-  font-family: Roboto;
-  border-radius: 0.375rem;
-  height: 20px;
+  /* -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  line-height: 20px;
+  padding: 0px 0;
+  max-width: 100%;
+  min-width: 0;
+  width: 100%; */
+}
+
+.v-input__slotCSM {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: inherit;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 8px;
+  min-height: inherit;
+  position: relative;
+  -webkit-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
   width: 100%;
-  /* border: 1px solid gray;
+}
+
+.v-input__slotCSM {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: inherit;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 8px;
+  min-height: inherit;
+  position: relative;
+  -webkit-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+  width: 100%;
+}
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+  line-height: 20px;
+}
+.icon {
+  padding: 10px;
+  background: dodgerblue;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+}
+
+.divSL {
+  border: 2px solid #dadfe6 !important;
+  border-radius: 4px;
+
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cursorPointerCSM {
+  cursor: pointer;
+}
+.cursorCSM {
+  cursor: pointer;
+}
+.cursorCSM:hover {
+  color: red;
+}
+
+#container {
+  border: 2px solid #dadfe6 !important;
   border-radius: 4px;
   width: 100%;
-  -moz-appearance: none;
-  -webkit-appearance: none; */
+  text-align: center;
+  height: 26px;
+  padding-top: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
-/* 
-input {
-  padding: 0.75rem;
-  color: #2a2a2a;
-  background-color: #fff;
-  border: 2px solid #dadfe6;
-  font-family: Roboto;
-  border-radius: 0.375rem;
-  height: 20px;
-  width: 100%;
-} */
+
+#left {
+  float: left;
+  width: 65%;
+}
+
+#center {
+  display: inline-block;
+  margin: 0 auto;
+  width: 10%;
+}
+#secondDiv {
+  display: inline-block;
+  margin: 0 auto;
+  width: 10%;
+}
+
+#right {
+  float: right;
+  width: 10%;
+}
 </style>

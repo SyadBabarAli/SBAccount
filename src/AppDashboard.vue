@@ -99,124 +99,6 @@
           </template>
 
           <v-card>
-            <!-- <v-container>
-              <v-layout>
-                <v-flex lg3>
-                  <v-layout row wrap>
-                    <h4>
-                      <v-flex lg12>Lists</v-flex>
-                    </h4>
-                    <v-flex lg12>
-                      <a href="#/Customer">Customer</a>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Vendors</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Products</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Employees</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>SalesPersons</button>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-                <v-flex lg2>
-                  <v-layout row wrap>
-                    <h4>
-                      <v-flex lg12>Categories</v-flex>
-                    </h4>
-                    <v-flex lg12>
-                      <button>Customer Categories</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Vendor Categories</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Product Categories</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Brands</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Departments</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Designation</button>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-                <v-flex lg2>
-                  <v-layout row wrap>
-                    <h4>
-                      <v-flex lg12>General</v-flex>
-                    </h4>
-                    <v-flex lg12>
-                      <button>Taxes</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Warehouses</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Adjustment Types</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Custom Fields</button>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-                <v-flex lg2>
-                  <v-layout row wrap>
-                    <h4>
-                      <v-flex lg12>Sales Geography</v-flex>
-                    </h4>
-                    <v-flex lg12>
-                      <button>Regions</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Zones</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Territories</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Areas</button>
-                    </v-flex>
-                    <v-flex lg12>
-                      <button>Sub Area</button>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-                <v-flex lg2>
-                  <v-layout row wrap>
-                    <h4>
-                      <v-flex lg12>Groups</v-flex>
-                    </h4>
-                    <v-flex lg12>
-                      <button>Branches</button>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-              </v-layout>
-            </v-container> -->
-            <!-- <v-container fill-height fluid class="x-ctn">
-              <v-layout :align="alignment" :justify="justify" class="x-row grey lighten-5">
-                <v-select
-                  class="x-input-select"
-                  v-model="alignment"
-                  :items="alignmentsItems"
-                  label="Vertical align"
-                ></v-select>
-                <v-select
-                  class="x-input-select"
-                  v-model="justify"
-                  :items="justifyItems"
-                  label="Horizontal align"
-                ></v-select>
-              </v-layout>
-            </v-container>-->
             <v-container fill-height fluid class="x-ctn">
               <v-layout align="start" class="x-row grey lighten-5">
                 <v-flex xs12 sm4 text-xs-left>
@@ -234,7 +116,7 @@
                     <v-btn depressed small to="/Employees">Employees</v-btn>
                   </div>
                   <div>
-                    <v-btn depressed small to="/SalesPersons">Sales Persons</v-btn>
+                    <v-btn depressed small to="/SalesPerson">Sales Person</v-btn>
                   </div>
                 </v-flex>
 

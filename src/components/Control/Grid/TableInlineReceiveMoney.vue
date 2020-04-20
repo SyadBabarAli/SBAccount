@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- {{tableRow}} -->
     <table id="csmTable">
       <thead>
         <th class="txtLeft">Payment Mode</th>
@@ -17,7 +18,7 @@
           <td class="txtLeft">{{items.AccountName}}</td>
           <td class="txtLeft">{{items.Reference}}</td>
           <td class="txtLeft">{{items.BankName}}</td>
-          <td class="txtLeft">{{items.InstrumentNo}}</td>
+          <td class="txtLeft">{{items.Instrument}}</td>
           <td class="txtRight">{{items.InstrumentDate}}</td>
           <td class="txtRight">{{items.Amount}}</td>
           <td class="txtCenter">
@@ -49,7 +50,7 @@
             <input type="text" v-model="BankName" class="txtRight" />
           </td>
           <td>
-            <input type="text" v-model="InstrumentNo" class="txtRight" />
+            <input type="text" v-model="Instrument" class="txtRight" />
           </td>
           <td>
             <input
@@ -83,10 +84,10 @@ export default {
       selectPaymentMode: "",
       itemsPaymentMode: null,
       selectAccountType: "",
-      itemsAccountType: [{ value: 1, text: "Cash In Hand" }],
+      itemsAccountType: [{ value: 201241, text: "Cash In Hand" }],
       Reference: "",
       BankName: "",
-      InstrumentNo: "",
+      Instrument: "",
       InstrumentDate: new Date(),
       Amount: "",
 
@@ -110,7 +111,7 @@ export default {
     // },
     tableRows: function() {
       this.tableRow = this.tableRows == undefined ? [] : this.tableRows;
-    },
+    }
 
     // DiscountAmount: function(val) {
     //   this.calculateLineTotal(this.tableRow);
@@ -160,12 +161,12 @@ export default {
       var PaymentModeId = this.selectPaymentMode.SettingPaymentModeId;
       var PaymentMode = this.selectPaymentMode.Name;
 
-      var AccountTypeId = this.selectAccountType.value;
+      var AccountId = this.selectAccountType.value;
       var AccountName = this.selectAccountType.text;
 
       var Reference = this.Reference;
       var BankName = this.BankName;
-      var InstrumentNo = this.InstrumentNo;
+      var Instrument = this.Instrument;
       var InstrumentDate = this.InstrumentDate.toISOString().split("T")[0];
       var Amount = this.Amount;
 
@@ -173,12 +174,12 @@ export default {
         PaymentModeId: PaymentModeId,
         PaymentMode: PaymentMode,
 
-        AccountTypeId: AccountTypeId,
+        AccountId: AccountId,
         AccountName: AccountName,
 
         Reference: Reference,
         BankName: BankName,
-        InstrumentNo: InstrumentNo,
+        Instrument: Instrument,
         InstrumentDate: InstrumentDate,
         Amount: Amount
       });
@@ -193,7 +194,7 @@ export default {
 
       this.Reference = "";
       this.BankName = "";
-      this.InstrumentNo = "";
+      this.Instrument = "";
       this.InstrumentDate = new Date();
       this.Amount = "";
       this.refreshData();
